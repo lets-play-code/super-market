@@ -1,0 +1,46 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.5.RELEASE'
+	id 'java'
+}
+
+apply plugin: 'io.spring.dependency-management'
+
+group = 'xp.tdd.supermarket'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.11'
+
+repositories {
+	mavenCentral()
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    cucumberRuntime {
+        extendsFrom runtimeOnly
+        extendsFrom testImplementation
+    }
+}
+
+dependencies {
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql'
+    compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.cucumber:cucumber-java:6.10.2'
+    testImplementation 'io.cucumber:cucumber-spring:6.10.2'
+    testImplementation 'org.assertj:assertj-core:3.19.0'
+}
+
+task cucumber(type: JavaExec) {
+    dependsOn assemble, testClasses
+    main = "io.cucumber.core.cli.Main"
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    environment "SPRING_PROFILES_ACTIVE", "test"
+    args = ['--plugin', 'pretty', '--glue', 'cucumber.steps', 'src/test/resources']
+}
