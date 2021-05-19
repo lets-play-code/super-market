@@ -35,6 +35,21 @@ dependencies {
     testImplementation 'io.cucumber:cucumber-java:6.10.2'
     testImplementation 'io.cucumber:cucumber-spring:6.10.2'
     testImplementation 'org.assertj:assertj-core:3.19.0'
+    testCompile "org.testcontainers:testcontainers:1.15.1"
+    testCompile "org.testcontainers:postgresql:1.15.1"
+}
+
+test {
+    if (project.hasProperty('at')) {
+        doLast {
+            javaexec {
+                main = "io.cucumber.core.cli.Main"
+                classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+                environment "SPRING_PROFILES_ACTIVE", "test"
+                args = ['--plugin', 'pretty', '--glue', 'cucumber.at', 'src/test/acceptance-test/'.plus(at)]
+            }
+        }
+    }
 }
 
 task cucumber(type: JavaExec) {
