@@ -1,6 +1,8 @@
 plugins {
     id 'org.springframework.boot' version '2.1.5.RELEASE'
-	id 'java'
+    id 'org.sonarqube' version "2.7"
+    id 'jacoco'
+    id 'java'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -37,6 +39,16 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testCompile "org.testcontainers:testcontainers:1.15.1"
     testCompile "org.testcontainers:postgresql:1.15.1"
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
+jacocoTestReport {
+    reports {
+        xml.enabled true
+    }
+    dependsOn test
 }
 
 test {
