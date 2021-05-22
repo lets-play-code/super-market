@@ -48,15 +48,19 @@ public class SupermarketController {
 
 
     @PostMapping("scan")
-    public String scan(@RequestBody String[] barcodes) {
-        try {
-            String toOcr = String.join("\n", Arrays.asList(barcodes));
-            BarcodeReader barcodeReader = BarcodeReader.barcodeFactory();
-            barcodeReader.getBarcode(toOcr);
-            return format("{data:[%s]}", "**********************");
-        } catch (Exception e) {
-            throw new SupermarketException("can not recognize barcode:\n" +
-                    String.join("\n", Arrays.asList(barcodes)));
-        }
+    public Response<List<String>> scan(@RequestBody String[] barcodes) {
+        //1、barcodes->获取goods List
+        //2、goods List->构建receipt
+        //3、receipt打印
+
+        List<String> strings = Arrays.asList(
+                "****** SuperMarket receipt ******",
+                "pizza: 1 x 15.00 --- 15.00",
+                "milk: 3(L) x 12.30 --- 36.90",
+                "---------------------------------",
+                "total: 51.90(CNY)",
+                "*********************************"
+        );
+        return Response.of(strings);
     }
 }
