@@ -8,15 +8,14 @@ import java.util.Optional;
 
 @Component
 public class ItemRepositoryImpl implements ItemRepository {
-    private ItemDao itemDao;
+    private ItemDAO itemDao;
 
-    public ItemRepositoryImpl(ItemDao itemDao) {
+    public ItemRepositoryImpl(ItemDAO itemDao) {
         this.itemDao = itemDao;
     }
 
     @Override
     public Optional<Item> findByBarcode(String barcode) {
-        return itemDao.getSampleItems().stream().filter(item -> item.getBarcode().equals(barcode))
-                .findFirst();
+        return itemDao.findById(barcode).map(ItemDO::toEntity);
     }
 }
