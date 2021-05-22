@@ -19,8 +19,12 @@ public class Order {
     private double price;
     private String type;
     private int quantity;
-    private String message;
-    private String inBarcode;
+
+    public static Order create(Item item, int quantity) {
+        return new Order(item.getBarcode(), item.getName(), item.getUnit(),
+                item.getPrice(), "", quantity);
+
+    }
 
     public double getAmount() {
         return price * quantity;

@@ -3,8 +3,10 @@ package mob.code.supermarket.service;
 import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.dao.ItemDao;
-import org.junit.Assert;
+import mob.code.supermarket.model.SupermarketException;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -15,10 +17,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.junit.Assert.assertThat;
 
 
 /**
@@ -28,9 +30,10 @@ import static org.junit.Assert.assertThat;
  * version: 1.0 <br>
  */
 @RunWith(MockitoJUnitRunner.class)
-
 public class ItemServiceTest {
 
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @InjectMocks
     ItemService itemService;
@@ -38,13 +41,13 @@ public class ItemServiceTest {
     ItemDao itemDao;
 
     @Test
-   public void given_barcode_then_order() {
+    public void given_barcode_then_order() {
         String inbarcode = "12345678";
         Item item = new Item("12345", "apple", "cn", 2.2d, "1");
         given(itemDao.getItem(Mockito.any())).willReturn(Optional.of(item));
         Order order = itemService.makeOrder(inbarcode);
-        Order order1 = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", 1, "", inbarcode);
-        assertThat(order,is(order1));
+        Order order1 = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", 1);
+        assertThat(order, is(order1));
     }
 
     @Test
@@ -53,7 +56,7 @@ public class ItemServiceTest {
         Item item = new Item("22345678", "milk", "L", 15.0d, "1");
         given(itemDao.getItem(Mockito.any())).willReturn(Optional.of(item));
         Order order = itemService.makeOrder(barcode);
-        assertThat(order, is(new Order("22345678", "milk", "L", 15.0d,"", 3, "", barcode)));
+        assertThat(order, is(new Order("22345678", "milk", "L", 15.0d, "", 3)));
     }
 
     @Test
@@ -65,10 +68,12 @@ public class ItemServiceTest {
     }
 
     @Test
-    public void when_invalid_barcode_then_empty_order() {
+    public void should_throw_Supermarket_Exception_when_the_barcode_is_not_exist() {
         given(itemDao.getItem(Mockito.anyString())).willReturn(Optional.empty());
-        Order order = itemService.makeOrder("12332413543");
-        Order emptyOrder = new Order("", "", "", 0d, "", 0, "not find", "");
-        assertThat(order, is(emptyOrder));
+        expectedException.expect(SupermarketException.class);
+        String errorBarcode = "barcodeNotExist";
+        expectedException.expectMessage(format("item doesn't exist: %s", errorBarcode));
+
+        itemService.makeOrder(errorBarcode);
     }
 }

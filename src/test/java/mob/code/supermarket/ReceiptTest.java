@@ -20,8 +20,8 @@ public class ReceiptTest {
         //        result.add("pizza: 1 x 15.00 --- 15.00");
         //        result.add("milk: 3(L) x 12.30 --- 36.90");
         Receipt receipt = new Receipt(Arrays.asList(
-                new Order("123", "pizza", "", 15, "0", 1, null, null),
-                new Order("1234", "milk", "L", 12.30, "1", 3, null, null)
+                new Order("123", "pizza", "", 15, "0", 1),
+                new Order("1234", "milk", "L", 12.30, "1", 3)
         ));
 
         //when

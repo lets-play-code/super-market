@@ -12,4 +12,5 @@ public class SupermarketException extends RuntimeException {
     public SupermarketException(Throwable exception) {
         super(exception);
     }
+
 }
