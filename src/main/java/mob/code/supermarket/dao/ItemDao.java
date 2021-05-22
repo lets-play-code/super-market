@@ -27,7 +27,7 @@ public class ItemDao {
         try (Connection conn = DriverManager.getConnection(jdbcUrl,
                 dbUser, dbPassword); Statement stmt = conn.createStatement()) {
             ArrayList<Item> items = new ArrayList<>();
-            ResultSet rs = stmt.executeQuery("select * from item limit 3");
+            ResultSet rs = stmt.executeQuery("select * from item");
             while (rs.next()) {
                 String barcode = rs.getString("barcode");
                 String name = rs.getString("name");

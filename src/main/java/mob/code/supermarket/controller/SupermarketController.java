@@ -22,6 +22,9 @@ public class SupermarketController {
     public Response<List<String>> scan(@RequestBody List<String> items) {
         List<BuyItem> buyItems = items.stream().map(BuyItem::from).collect(Collectors.toList());
 
+        //1、
+
+        //2、
         List<ReceiptItem> receiptItems = buyItems.stream().map(buyItem -> {
             Item item = itemRepository.findByBarcode(buyItem.getBarcode()).orElseThrow(() -> new ItemNotFoundException(buyItem.getBarcode()));
             return new ReceiptItem(item.getName(), buyItem.getCount(), item.getPrice(), item.getUnit());
