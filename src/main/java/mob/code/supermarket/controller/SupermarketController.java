@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -44,11 +45,21 @@ public class SupermarketController {
                 .stream()
                 .map(Barcode::fromBarcodeString)
                 .collect(Collectors.toList());
+
         // 2. code -> 商品
         // 3. 商品 -> 收据条目
+        List<ReceiptItem> receiptItemList = barcodeList.stream().map(x -> {
+            Item item = itemDao.getItem(x.getCode());
+            if (Objects.isNull(item)) {
+                throw new SupermarketException("item doesn't exist: " + x.getCode());
+            }
+            return new ReceiptItem(item.getName(), x.getNumber(), BigDecimal.valueOf(item.getPrice()), item.getUnit());
+        }).collect(Collectors.toList());
+
+
         // 4. 格式化输出
         Receipt receipt = new Receipt();
-        receipt.add(new ReceiptItem("pizza", 1, new BigDecimal("15.00")));
+        receipt.addAll(receiptItemList);
         return Response.of(receipt.toResult());
     }
 

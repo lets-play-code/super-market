@@ -14,7 +14,7 @@ import java.util.List;
  * Don't use the code as a reference.
  */
 @Component
-public class ItemDao {
+public class ItemDao implements IItemDao {
 
     @Value("${spring.datasource.url}")
     private String jdbcUrl;
@@ -23,6 +23,7 @@ public class ItemDao {
     @Value("${spring.datasource.password}")
     private String dbPassword;
 
+    @Override
     public List<Item> getSampleItems() {
         try (Connection conn = DriverManager.getConnection(jdbcUrl,
                 dbUser, dbPassword); Statement stmt = conn.createStatement()) {
@@ -40,5 +41,28 @@ public class ItemDao {
         } catch (SQLException e) {
             throw new SupermarketException(e);
         }
+    }
+
+    @Override
+    public List<Item> getItems(List<String> codes) {
+        return null;
+    }
+
+    public Item getItem(String code) {
+        try (Connection conn = DriverManager.getConnection(jdbcUrl,
+                dbUser, dbPassword); Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery("select * from item where barcode='" + code + "'");
+            if (rs.next()) {
+                String barcode = rs.getString("barcode");
+                String name = rs.getString("name");
+                String unit = rs.getString("unit");
+                double price = rs.getDouble("price");
+                int type = rs.getInt("type");
+                return new Item(barcode, name, unit, price, type == 0 ? "individual" : "weight");
+            }
+        } catch (SQLException e) {
+            throw new SupermarketException(e);
+        }
+        return null;
     }
 }

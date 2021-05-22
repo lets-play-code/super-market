@@ -12,7 +12,7 @@ public class ReceiptDomainTest {
     @Test
     public void 当输入为披萨时返回账单小票() {
         Receipt receipt = new Receipt();
-        receipt.add(new ReceiptItem("pizza", 1, new BigDecimal("15.00")));
+        receipt.add(new ReceiptItem("pizza", 1, new BigDecimal("15.00"), ""));
         List<String> strings = receipt.toResult();
         List<String> expected = List.of(
                 "****** SuperMarket receipt ******",
@@ -26,7 +26,7 @@ public class ReceiptDomainTest {
     @Test
     public void 当输入两个披萨时返回账单小票() {
         Receipt receipt = new Receipt();
-        receipt.add(new ReceiptItem("pizza", 2, new BigDecimal("15.00")));
+        receipt.add(new ReceiptItem("pizza", 2, new BigDecimal("15.00"), ""));
         List<String> strings = receipt.toResult();
         List<String> expected = List.of(
                 "****** SuperMarket receipt ******",

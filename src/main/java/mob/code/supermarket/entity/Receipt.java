@@ -25,7 +25,7 @@ public class Receipt {
         BigDecimal reduce = items.stream()
                 .map(ReceiptItem::totalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        return String.format("total: %s(CNY)", reduce);
+        return String.format("total: %.2f(CNY)", reduce);
     }
 
     private List<String> getItemsString() {
@@ -36,5 +36,9 @@ public class Receipt {
 
     public void add(ReceiptItem receiptItem) {
         items.add(receiptItem);
+    }
+
+    public void addAll(List<ReceiptItem> receiptItems) {
+        items.addAll(receiptItems);
     }
 }
