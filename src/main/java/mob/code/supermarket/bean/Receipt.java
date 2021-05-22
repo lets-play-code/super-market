@@ -1,7 +1,6 @@
 package mob.code.supermarket.bean;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -14,10 +13,10 @@ public class Receipt {
 
     private static final String HEADER = "****** SuperMarket receipt ******";
     private static final String TAIL = "*********************************";
+    private static final String LINE = "---------------------------------";
     private final List<Order> orders;
 
     public Receipt(List<Order> orders) {
-
         this.orders = orders;
     }
 
@@ -27,10 +26,17 @@ public class Receipt {
         orders.forEach(order -> {
             result.add(printOrder(order));
         });
-        result.add("---------------------------------");
-        result.add("total: 51.90(CNY)");
+        result.add(LINE);
+        result.add(printTotalAmount());
         result.add(TAIL);
         return result;
+    }
+
+    private String printTotalAmount() {
+        return format(
+                "total: %.2f(CNY)",
+                this.orders.stream().mapToDouble(Order::getAmount).sum()
+        );
     }
 
     private String printOrder(Order order) {
