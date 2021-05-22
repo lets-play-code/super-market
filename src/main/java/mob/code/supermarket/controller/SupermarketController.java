@@ -7,6 +7,7 @@ import mob.code.supermarket.legacy.BarcodeReader;
 import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +30,17 @@ public class SupermarketController {
     @GetMapping("item")
     public Response<List<Item>> getItems() {
         return Response.of(itemDao.getSampleItems());
+    }
+
+    @PostMapping("scan")
+    public Response<List<String>> scan() {
+        return Response.of(List.of(
+                "****** SuperMarket receipt ******",
+                "pizza: 1 x 15.00 --- 15.00",
+                "---------------------------------",
+                "total: 15.00(CNY)",
+                "*********************************"
+        ));
     }
 
     @PostMapping("tryBarCode")
