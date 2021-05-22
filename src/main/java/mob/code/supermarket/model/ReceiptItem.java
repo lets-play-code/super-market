@@ -1,14 +1,32 @@
 package mob.code.supermarket.model;
 
+import mob.code.supermarket.bean.Item;
+
 public class ReceiptItem {
-    private final String name;
-    private final int quantity;
-    private final double price;
+    private String name;
+    private int quantity;
+    private double price;
+    private Item item;
+    private String unit;
+
+    public ReceiptItem(String name, int quantity, double price, String unit) {
+        this.name = name;
+        this.quantity = quantity;
+        this.price = price;
+        this.unit = unit;
+    }
 
     public ReceiptItem(String name, int quantity, double price) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
+    }
+
+    public ReceiptItem(Item item, int quantity) {
+        this.name = item.getName();
+        this.price = item.getPrice();
+        this.unit = item.getUnit();
+        this.quantity = quantity;
     }
 
     public int getQuantity() {
@@ -25,5 +43,21 @@ public class ReceiptItem {
 
     public String getName() {
         return name;
+    }
+
+    String format() {
+        return String.format("%s: %d%s x %.2f --- %.2f",
+                getName(),
+                getQuantity(),
+                getUnit(),
+                getPrice(),
+                getCost());
+    }
+
+    private String getUnit() {
+        if (unit == null) {
+            return "";
+        }
+        return String.format("(%s)", this.unit);
     }
 }

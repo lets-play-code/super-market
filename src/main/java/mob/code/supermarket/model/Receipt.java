@@ -2,6 +2,7 @@ package mob.code.supermarket.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Receipt {
     private final List<ReceiptItem> items = new ArrayList<>();
@@ -24,16 +25,7 @@ public class Receipt {
     }
 
     private List<String> formattedItems() {
-        List<String> result = new ArrayList<>();
-        for (ReceiptItem receiptItem : items) {
-            result.add(
-                    String.format("%s: %d x %.2f --- %.2f",
-                            receiptItem.getName(),
-                            receiptItem.getQuantity(),
-                            receiptItem.getPrice(),
-                            receiptItem.getCost()));
-        }
-        return result;
+        return items.stream().map(ReceiptItem::format).collect(Collectors.toList());
     }
 
     private double getTotalCost() {

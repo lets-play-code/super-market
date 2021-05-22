@@ -39,6 +39,7 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testCompile "org.testcontainers:testcontainers:1.15.1"
     testCompile "org.testcontainers:postgresql:1.15.1"
+    testImplementation group: 'org.dbunit', name: 'dbunit', version: '2.7.0'
 }
 
 test {

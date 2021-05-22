@@ -48,6 +48,7 @@ public class SupermarketController {
 
     @PostMapping("scan")
     public Response<String[]> scan() {
+
         /*
         1. code -> goods + quantity
         2. goods + quantity -> receipt items
@@ -62,6 +63,8 @@ public class SupermarketController {
 //        receipt.format(receiptItems);
 
         Receipt receipt = new Receipt();
+        receipt.add(new ReceiptItem("pizza",1,15.00));
+        receipt.add(new ReceiptItem("milk",3,12.30,"L"));
         String[] format = receipt.format();
         return Response.of(format);
     }
