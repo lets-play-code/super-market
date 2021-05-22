@@ -1,9 +1,6 @@
 package mob.code.supermarket.controller;
 
-import mob.code.supermarket.bean.BuyItem;
-import mob.code.supermarket.bean.Item;
-import mob.code.supermarket.bean.Receipt;
-import mob.code.supermarket.bean.ReceiptItem;
+import mob.code.supermarket.bean.*;
 import mob.code.supermarket.dao.ItemRepository;
 import mob.code.supermarket.dto.Response;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +26,7 @@ public class SupermarketController {
         List<BuyItem> buyItems = items.stream().map(BuyItem::from).collect(Collectors.toList());
 
         List<ReceiptItem> receiptItems = buyItems.stream().map(buyItem -> {
-            Item item = itemRepository.findByBarcode(buyItem.getBarcode()).orElse(null);
+            Item item = itemRepository.findByBarcode(buyItem.getBarcode()).orElseThrow(() -> new ItemNotFoundException(buyItem.getBarcode()));
             return new ReceiptItem(item.getName(), buyItem.getCount(), item.getPrice(), item.getUnit());
         }).collect(Collectors.toList());
 
@@ -37,5 +34,9 @@ public class SupermarketController {
         return Response.of(receipt.output());
     }
 
+    @ExceptionHandler(ItemNotFoundException.class)
+    public Response itemNotFound(ItemNotFoundException e) {
+        return Response.error(e.getMessage());
+    }
 
 }
