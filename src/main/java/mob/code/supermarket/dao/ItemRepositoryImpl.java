@@ -1,6 +1,7 @@
 package mob.code.supermarket.dao;
 
 import mob.code.supermarket.bean.Item;
+import mob.code.supermarket.bean.ItemRepository;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

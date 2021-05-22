@@ -3,8 +3,6 @@ package mob.code.supermarket.bean;
 import lombok.Getter;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Optional;
 
 @Getter
@@ -25,7 +23,7 @@ public class ReceiptItem {
         String unitPart = Optional.ofNullable(this.unit)
                 .filter(str -> !StringUtils.isEmpty(str))
                 .map(u -> "(" + u + ")").orElse("");
-        return name + ": " + count + unitPart + " x " + new BigDecimal(price).setScale(2, RoundingMode.HALF_UP).toString() + " --- " + new BigDecimal(this.total()).setScale(2, RoundingMode.HALF_UP).toString();
+        return name + ": " + count + unitPart + " x " + new Money(price) + " --- " + new Money(total());
     }
 
     public double total() {

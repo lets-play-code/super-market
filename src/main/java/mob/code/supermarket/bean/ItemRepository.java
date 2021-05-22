@@ -1,4 +1,4 @@
-package mob.code.supermarket.dao;
+package mob.code.supermarket.bean;
 
 import mob.code.supermarket.bean.Item;
 
