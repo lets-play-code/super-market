@@ -12,7 +12,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.11'
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 configurations {
@@ -28,14 +28,15 @@ configurations {
 
 dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.cucumber:cucumber-java:6.10.2'
     testImplementation 'io.cucumber:cucumber-spring:6.10.2'
+    testImplementation 'io.cucumber:cucumber-junit:6.10.2'
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testCompile "org.testcontainers:testcontainers:1.15.1"
     testCompile "org.testcontainers:postgresql:1.15.1"
