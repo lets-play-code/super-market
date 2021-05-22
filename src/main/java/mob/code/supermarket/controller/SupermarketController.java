@@ -4,6 +4,8 @@ import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.dao.ItemDao;
 import mob.code.supermarket.dto.Response;
 import mob.code.supermarket.legacy.BarcodeReader;
+import mob.code.supermarket.model.Receipt;
+import mob.code.supermarket.model.ReceiptItem;
 import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,5 +44,25 @@ public class SupermarketController {
             throw new SupermarketException("can not recognize barcode:\n" +
                     String.join("\n", Arrays.asList(barcodes)));
         }
+    }
+
+    @PostMapping("scan")
+    public Response<String[]> scan() {
+        /*
+        1. code -> goods + quantity
+        2. goods + quantity -> receipt items
+        3. receipt formatting
+         */
+
+        List<String> codes;
+
+
+//        List<ReceiptItem> receiptItems;
+//        Receipt receipt = new Receipt();
+//        receipt.format(receiptItems);
+
+        Receipt receipt = new Receipt();
+        String[] format = receipt.format();
+        return Response.of(format);
     }
 }
