@@ -63,4 +63,12 @@ public class ItemServiceTest {
         assertThat(2, is(orders.size()));
 
     }
+
+    @Test
+    public void when_invalid_barcode_then_empty_order() {
+        given(itemDao.getItem(Mockito.anyString())).willReturn(Optional.empty());
+        Order order = itemService.makeOrder("12332413543");
+        Order emptyOrder = new Order("", "", "", 0d, "", 0, "not find", "");
+        assertThat(order, is(emptyOrder));
+    }
 }
