@@ -1,5 +1,7 @@
 package mob.code.supermarket.controller;
 
+import mob.code.supermarket.bean.ItemNotFoundException;
+import mob.code.supermarket.bean.WrongQuantityException;
 import mob.code.supermarket.dto.Response;
 import mob.code.supermarket.model.SupermarketException;
 import org.slf4j.Logger;
@@ -21,4 +23,7 @@ public class SupermarketExceptionHandler {
         }
         return new ResponseEntity<>(Response.error(exception.getMessage()), HttpStatus.OK);
     }
+
+
+
 }

@@ -5,6 +5,11 @@ public class WrongQuantityException extends RuntimeException {
 
 
     public WrongQuantityException(String barcode) {
-        this.barcode =barcode;
+        this.barcode = barcode;
+    }
+
+    @Override
+    public String getMessage() {
+        return "wrong quantity of " + this.barcode;
     }
 }

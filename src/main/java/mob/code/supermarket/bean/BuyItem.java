@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BuyItem {
-
     private String barcode;
     private double count;
     private List<String> original;
@@ -37,5 +36,11 @@ public class BuyItem {
             return new BuyItem(split[0], Double.parseDouble(split[1]), str);
         }
         return new BuyItem(str, 1, str);
+    }
+
+    public void ensureHasQuantity() {
+        if (!this.original.stream().allMatch(record -> record.contains("-"))) {
+            throw new WrongQuantityException(barcode);
+        }
     }
 }

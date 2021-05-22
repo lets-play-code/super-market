@@ -4,5 +4,5 @@ CREATE TABLE item
     name    text  NOT NULL,
     unit    text  NOT NULL,
     price   money NOT NULL,
-    type    int   NOT NULL
+    type    text   NOT NULL
 );

@@ -22,6 +22,7 @@ public class ReceiptItem {
             new Quantity(this.count).assertIsInteger(buyItem.getBarcode());
         }
         if (type.equals("1")) {
+            buyItem.ensureHasQuantity();
             new Quantity(this.count).assertLegal(buyItem.getBarcode());
         }
     }

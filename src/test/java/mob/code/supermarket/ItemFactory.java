@@ -26,7 +26,7 @@ public class ItemFactory {
         args.put("name", item.getName());
         args.put("unit", Optional.ofNullable(item.getUnit()).orElse(""));
         args.put("price", BigDecimal.valueOf(item.getPrice()));
-        args.put("type", 0);
+        args.put("type", item.getType());
         namedParameterJdbcTemplate.update("insert into item (barcode,name,unit,price,type) values (:barcode,:name,:unit,:price,:type)", args);
     }
 

@@ -35,4 +35,8 @@ public class SupermarketController {
         return Response.error(e.getMessage());
     }
 
+    @ExceptionHandler(WrongQuantityException.class)
+    public Response wrongQuantity(WrongQuantityException e) {
+        return Response.error(e.getMessage());
+    }
 }
