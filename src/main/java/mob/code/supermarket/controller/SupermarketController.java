@@ -26,7 +26,8 @@ public class SupermarketController {
 
     @PostMapping("scan")
     public Response<List<String>> scan(@RequestBody List<String> items) {
-        List<BuyItem> buyItems = Arrays.asList(new BuyItem("12345678", 1), new BuyItem("22345678", 3));
+        List<BuyItem> buyItems = items.stream().map(BuyItem::from).collect(Collectors.toList());
+
         List<ReceiptItem> receiptItems = buyItems.stream().map(buyItem -> {
             Item item = itemRepository.findByBarcode(buyItem.getBarcode()).orElse(null);
             return new ReceiptItem(item.getName(), buyItem.getCount(), item.getPrice(), item.getUnit());

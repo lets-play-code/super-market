@@ -85,6 +85,7 @@ public class RestfulSteps {
     public void 扫描条码结果为(String content) throws JSONException {
         HttpMethod httpMethod = HttpMethod.valueOf("POST");
         response = RestfulHelper.connect(port).require(httpMethod, "/scan", new Gson().toJson(scanData));
+        System.out.println(response.getBody());
         JSONAssert.assertEquals(content, response.getBody(), false);
     }
 }
