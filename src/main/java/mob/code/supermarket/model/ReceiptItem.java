@@ -1,6 +1,7 @@
 package mob.code.supermarket.model;
 
 import mob.code.supermarket.bean.Item;
+import org.springframework.util.StringUtils;
 
 public class ReceiptItem {
     private String name;
@@ -55,7 +56,7 @@ public class ReceiptItem {
     }
 
     private String getUnit() {
-        if (unit == null) {
+        if (StringUtils.isEmpty(StringUtils.trimAllWhitespace(unit))) {
             return "";
         }
         return String.format("(%s)", this.unit);

@@ -62,9 +62,12 @@ public class SupermarketController {
 //        Receipt receipt = new Receipt();
 //        receipt.format(receiptItems);
 
+        Item pizza = new Item("12345678", "pizza", "", 15.00, "0");
+        Item milk = new Item("22345678", "milk", "L", 12.30, "0");
+
         Receipt receipt = new Receipt();
-        receipt.add(new ReceiptItem("pizza",1,15.00));
-        receipt.add(new ReceiptItem("milk",3,12.30,"L"));
+        receipt.add(new ReceiptItem(pizza, 1));
+        receipt.add(new ReceiptItem(milk, 3));
         String[] format = receipt.format();
         return Response.of(format);
     }
