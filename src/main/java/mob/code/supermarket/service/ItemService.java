@@ -7,7 +7,9 @@ import mob.code.supermarket.dao.ItemDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * description: ItemService <br>
@@ -25,7 +27,8 @@ public class ItemService {
         BarcodeAndCount barcodeAndCount = parseBarcode(inbarcode);
         Optional<Item> item = itemDao.getItem(barcodeAndCount.getBarcode());
         if (item.isPresent())
-            new Order(item.get().getBarcode(), item.get().getName(), item.get().getUnit(), item.get().getPrice(), "", barcodeAndCount.getCount(), "", inbarcode);
+          return  new Order(item.get().getBarcode(), item.get().getName(), item.get().getUnit(), item.get().getPrice(), "", barcodeAndCount.getCount(), "", inbarcode);
+       else
         return new Order("", "", "", 0d, "", 0, "not find", "");
     }
 
@@ -36,5 +39,9 @@ public class ItemService {
         } else {
             return new BarcodeAndCount(split[0], Integer.parseInt(split[1]));
         }
+    }
+
+    public List<Order> makeOrders(List<String> barcodes) {
+        return barcodes.stream().map(this::makeOrder).collect(Collectors.toList());
     }
 }
