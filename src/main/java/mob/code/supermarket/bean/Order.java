@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Order {
+
     private String barcode;
     private String name;
     private String unit;
@@ -18,4 +19,5 @@ public class Order {
     private int quantity;
     private String message;
     private String inBarcode;
+
 }
