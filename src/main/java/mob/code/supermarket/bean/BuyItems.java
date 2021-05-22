@@ -1,7 +1,6 @@
 package mob.code.supermarket.bean;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -15,7 +14,7 @@ public class BuyItems {
     public Stream<BuyItem> toList() {
         return items.stream()
                 .map(BuyItem::from)
-                .collect(Collectors.groupingBy(BuyItem::getBarcode, Collectors.summingInt(BuyItem::getCount)))
+                .collect(Collectors.groupingBy(BuyItem::getBarcode, Collectors.summingDouble( BuyItem::getCount)))
                 .entrySet()
                 .stream().map(entry -> new BuyItem(entry.getKey(), entry.getValue()));
     }
