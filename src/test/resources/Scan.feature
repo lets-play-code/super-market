@@ -4,7 +4,7 @@ Feature: Scan products
     When I 'POST' the api '/scan' with
       """
       [
-        "123456"
+        "12345678"
       ]
       """
     Then the server response will match
@@ -39,7 +39,7 @@ Feature: Scan products
     When I 'POST' the api '/scan' with
       """
       [
-        "123456",
+        "12345678",
         "22345678-3"
       ]
       """
@@ -56,3 +56,25 @@ Feature: Scan products
         ]
       }
       """
+
+#  Scenario: Scan product need validate duplicate
+#    When I 'POST' the api '/scan' with
+#      """
+#      [
+#        "12345678",
+#        "12345678",
+#        "12345678"
+#      ]
+#      """
+#    Then the server response will match
+#      """
+#      {
+#        "data": [
+#          "****** SuperMarket receipt ******",
+#          "pizza: 3 x 15.00 --- 45.00",
+#          "---------------------------------",
+#          "total: 45.00(CNY)",
+#          "*********************************"
+#        ]
+#      }
+#      """
