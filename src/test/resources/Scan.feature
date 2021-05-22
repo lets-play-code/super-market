@@ -1,23 +1,23 @@
-Feature: sanity check
+Feature: scan code
 
-  Scenario: ping
-    When I 'GET' the api '/ping'
-    Then the server response will match '{ data: "pong" }'
-
-  Scenario: show sample items
-    When I 'GET' the api '/item'
-    And the server response will match
+  Scenario: scan api demo
+    When I 'POST' the api '/scan' with
       """
-      { data: [
-        { barcode: "81102001", name: "juice", unit: "", price: 5 },
-        { barcode: "81102002", name: "biscuit", unit: "", price: 13 },
-        { barcode: "81103001", name: "apple", unit: "KG", price: 4 }
-      ] }
+      [
+        "12345678",
+        "22345678-3"
+      ]
       """
-
-  Scenario: show sample error
-    When I 'GET' the api '/dontcall'
-    And the server response will match
+    Then the server response will match
       """
-      { error: "It is a sample error" }
-      """
+      {
+        "data": [
+          "****** SuperMarket receipt ******",
+          "pizza: 1 x 15.00 --- 15.00",
+          "milk: 3(L) x 12.30 --- 36.90",
+          "---------------------------------",
+          "total: 51.90(CNY)",
+          "*********************************"
+        ]
+      }
+    """
