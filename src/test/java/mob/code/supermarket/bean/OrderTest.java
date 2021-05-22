@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class OrderTest {
+public class OrderTest {
     @Test
     public void should_create_order() {
         int quantity = 1;

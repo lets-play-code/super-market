@@ -34,7 +34,7 @@ public class ItemDao {
     public List<Item> getSampleItems() {
         try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
             ArrayList<Item> items = new ArrayList<>();
-            ResultSet rs = stmt.executeQuery("select * from item limit 3");
+            ResultSet rs = stmt.executeQuery("select * from item");
             while (rs.next()) {
                 String barcode = rs.getString("barcode");
                 String name = rs.getString("name");

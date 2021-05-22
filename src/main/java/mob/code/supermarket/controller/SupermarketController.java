@@ -1,11 +1,13 @@
 package mob.code.supermarket.controller;
 
 import mob.code.supermarket.bean.Item;
+import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.bean.Receipt;
 import mob.code.supermarket.dao.ItemDao;
 import mob.code.supermarket.dto.Response;
 import mob.code.supermarket.legacy.BarcodeReader;
 import mob.code.supermarket.model.SupermarketException;
+import mob.code.supermarket.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
@@ -18,6 +20,8 @@ import static java.lang.String.format;
 public class SupermarketController {
     @Autowired
     ItemDao itemDao;
+    @Autowired
+    private ItemService itemService;
 
     @GetMapping("ping")
     public Response<String> ping() {
@@ -50,14 +54,11 @@ public class SupermarketController {
 
     @PostMapping("scan")
     public Response<List<String>> scan(@RequestBody String[] barcodes) {
-        //1、barcodes->获取goods List
-        //2、goods List->构建receipt
-        //3、receipt打印
-        //todo: refactor
-        Receipt receipt = new Receipt(null);
+        List<Order> orders = itemService.makeOrders(Arrays.asList(barcodes));
+        Receipt receipt = new Receipt(orders);
         List<String> strings = receipt.print();
 
-        strings = Arrays.asList(
+        List<String> dmp = Arrays.asList(
                 "****** SuperMarket receipt ******",
                 "pizza: 1 x 15.00 --- 15.00",
                 "milk: 3(L) x 12.30 --- 36.90",
