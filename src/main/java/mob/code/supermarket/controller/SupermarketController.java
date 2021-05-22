@@ -3,11 +3,14 @@ package mob.code.supermarket.controller;
 import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.dao.ItemDao;
 import mob.code.supermarket.dto.Response;
+import mob.code.supermarket.entity.Receipt;
+import mob.code.supermarket.entity.ReceiptItem;
 import mob.code.supermarket.legacy.BarcodeReader;
 import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,13 +37,14 @@ public class SupermarketController {
 
     @PostMapping("scan")
     public Response<List<String>> scan() {
-        return Response.of(List.of(
-                "****** SuperMarket receipt ******",
-                "pizza: 1 x 15.00 --- 15.00",
-                "---------------------------------",
-                "total: 15.00(CNY)",
-                "*********************************"
-        ));
+        // 1. code 数量
+        // 2. code -> 商品
+        // 3. 商品 -> 收据条目
+        // 4. 格式化输出
+
+        Receipt receipt = new Receipt();
+        receipt.add(new ReceiptItem("pizza", 1, BigDecimal.valueOf(15.0)));
+        return Response.of(receipt.toResult());
     }
 
     @PostMapping("tryBarCode")
