@@ -1,11 +1,9 @@
 package mob.code.supermarket.bean;
 
-import lombok.Getter;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
-@Getter
 public class ReceiptItem {
     private final String name;
     private final int count;
