@@ -4,12 +4,14 @@ import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.dao.BarcodeAndCount;
 import mob.code.supermarket.dao.ItemDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import mob.code.supermarket.model.SupermarketException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 /**
  * description: ItemService <br>
@@ -20,16 +22,17 @@ import java.util.stream.Collectors;
 @Service
 public class ItemService {
 
-    @Autowired
-    ItemDao itemDao;
+    private final ItemDao itemDao;
+
+    public ItemService(ItemDao itemDao) {
+        this.itemDao = itemDao;
+    }
 
     public Order makeOrder(String inbarcode) {
         BarcodeAndCount barcodeAndCount = parseBarcode(inbarcode);
-        Optional<Item> item = itemDao.getItem(barcodeAndCount.getBarcode());
-        if (item.isPresent())
-          return  new Order(item.get().getBarcode(), item.get().getName(), item.get().getUnit(), item.get().getPrice(), "", barcodeAndCount.getCount(), "", inbarcode);
-       else
-        return new Order("", "", "", 0d, "", 0, "not find", "");
+        Optional<Item> items = itemDao.getItem(barcodeAndCount.getBarcode());
+        Item item = items.orElseThrow(() -> new SupermarketException(format("item doesn't exist: %s", inbarcode)));
+        return Order.create(item, barcodeAndCount.getCount());
     }
 
     public BarcodeAndCount parseBarcode(String barcode) {
@@ -42,6 +45,8 @@ public class ItemService {
     }
 
     public List<Order> makeOrders(List<String> barcodes) {
-        return barcodes.stream().map(this::makeOrder).collect(Collectors.toList());
+        return barcodes.stream()
+                .map(this::makeOrder)
+                .collect(Collectors.toList());
     }
 }

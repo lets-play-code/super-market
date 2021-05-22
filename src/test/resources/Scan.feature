@@ -1,6 +1,6 @@
 Feature: scan code
 
-  Scenario: scan api demo
+  Scenario: scan api success
     When I 'POST' the api '/scan' with
       """
       [
@@ -19,5 +19,20 @@ Feature: scan code
           "total: 51.90(CNY)",
           "*********************************"
         ]
+      }
+    """
+
+  Scenario: scan api error when the barcode is not exist
+    When I 'POST' the api '/scan' with
+      """
+      [
+        "88888888"
+      ]
+      """
+    Then the server response will match
+      """
+      {
+        "data": null,
+        "error": "item doesn't exist: 88888888"
       }
     """
