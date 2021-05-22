@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.String.format;
+
 @RestController
 @RequestMapping("/")
 public class SupermarketController {
@@ -38,6 +40,20 @@ public class SupermarketController {
             BarcodeReader barcodeReader = BarcodeReader.barcodeFactory();
             barcodeReader.getBarcode(toOcr);
             return barcodeReader.barcodes;
+        } catch (Exception e) {
+            throw new SupermarketException("can not recognize barcode:\n" +
+                    String.join("\n", Arrays.asList(barcodes)));
+        }
+    }
+
+
+    @PostMapping("scan")
+    public String scan(@RequestBody String[] barcodes) {
+        try {
+            String toOcr = String.join("\n", Arrays.asList(barcodes));
+            BarcodeReader barcodeReader = BarcodeReader.barcodeFactory();
+            barcodeReader.getBarcode(toOcr);
+            return format("{data:[%s]}", "**********************");
         } catch (Exception e) {
             throw new SupermarketException("can not recognize barcode:\n" +
                     String.join("\n", Arrays.asList(barcodes)));
