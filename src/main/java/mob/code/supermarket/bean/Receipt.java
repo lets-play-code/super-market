@@ -8,6 +8,10 @@ import java.util.List;
  * @date 2021/5/22 14:26
  */
 public class Receipt {
+    public Receipt(List<Order> orders) {
+
+    }
+
     public List<String> print() {
         List<String> expectedContent = Arrays.asList(
                 "****** SuperMarket receipt ******",

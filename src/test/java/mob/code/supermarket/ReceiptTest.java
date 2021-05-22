@@ -1,6 +1,8 @@
 package mob.code.supermarket;
 
+import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.bean.Receipt;
+import org.apache.commons.compress.archivers.ar.ArArchiveEntry;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -16,7 +18,7 @@ public class ReceiptTest {
     @Test
     public void should_print_receipt_items() {
         //given
-        Receipt receipt = new Receipt();
+        Receipt receipt = new Receipt(Arrays.asList(new Order(null, 1)));
 
         //when
         List<String> printContent = receipt.print();

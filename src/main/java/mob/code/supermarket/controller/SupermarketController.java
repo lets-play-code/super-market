@@ -53,7 +53,8 @@ public class SupermarketController {
         //1、barcodes->获取goods List
         //2、goods List->构建receipt
         //3、receipt打印
-        Receipt receipt = new Receipt();
+        //todo: refactor
+        Receipt receipt = new Receipt(null);
         List<String> strings = receipt.print();
 
         strings = Arrays.asList(
