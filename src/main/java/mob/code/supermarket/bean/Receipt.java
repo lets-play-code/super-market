@@ -1,6 +1,7 @@
 package mob.code.supermarket.bean;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,7 +26,7 @@ public class Receipt {
 
     public List<String> output() {
         BigDecimal total = new BigDecimal(getTotalPrice());
-        String formattedPrice = total.setScale(2).toString();
+        String formattedPrice = total.setScale(2, RoundingMode.HALF_UP).toString();
         List<String> itemsString = items.stream()
                 .map(ReceiptItem::format)
                 .collect(Collectors.toList());
@@ -35,7 +36,7 @@ public class Receipt {
 
     private double getTotalPrice() {
         return items.stream()
-                .mapToDouble(ReceiptItem::getPrice)
+                .mapToDouble(ReceiptItem::total)
                 .sum();
     }
 }

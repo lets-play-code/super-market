@@ -1,4 +1,4 @@
-package cucumber.ut;
+package mob.code.supermarket.ut;
 
 import mob.code.supermarket.bean.Receipt;
 import mob.code.supermarket.bean.ReceiptItem;
@@ -25,7 +25,19 @@ public class ReceiptTest {
 
     @Test
     public void 当有一个商品() throws Exception {
-        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("pizza", 1, 15.00)));
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("pizza", 1, 15.00, null)));
         assertThat(receipt.output(), is(Arrays.asList(header, "pizza: 1 x 15.00 --- 15.00", split, "total: 15.00(CNY)", footer)));
+    }
+
+    @Test
+    public void 当有一个商品带有单位() throws Exception {
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 1, 15.00, "L")));
+        assertThat(receipt.output(), is(Arrays.asList(header, "milk: 1(L) x 15.00 --- 15.00", split, "total: 15.00(CNY)", footer)));
+    }
+
+    @Test
+    public void 当有1个商品有2份() throws Exception {
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 2, 15.00, "L")));
+        assertThat(receipt.output(), is(Arrays.asList(header, "milk: 2(L) x 15.00 --- 30.00", split, "total: 30.00(CNY)", footer)));
     }
 }

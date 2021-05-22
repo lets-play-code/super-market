@@ -1,8 +1,11 @@
 package cucumber.steps;
 
 import cucumber.util.RestfulHelper;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.messages.internal.com.google.gson.Gson;
 import io.cucumber.spring.CucumberContextConfiguration;
 import mob.code.supermarket.Application;
 import org.json.JSONException;
@@ -17,6 +20,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static org.junit.Assert.assertEquals;
 
 
@@ -28,6 +35,7 @@ public class RestfulSteps {
     private int port;
 
     private ResponseEntity<String> response;
+    private List<String> scanData;
 
     @When("I {string} the api {string}")
     public void iCallTheApi(String method, String apiName) {
@@ -54,5 +62,22 @@ public class RestfulSteps {
     private void verifyResponseMatch(String expectedResponse) throws JSONException {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         JSONAssert.assertEquals(expectedResponse, response.getBody(), false);
+    }
+
+    @Given("条码扫描数据有")
+    public void 条码扫描数据有(List<Map<String, String>> items) {
+        this.scanData = items.stream().map(item -> item.get("条目")).collect(Collectors.toList());
+
+    }
+
+    @And("有商品")
+    public void 有商品(List<Map<String, String>> items) {
+    }
+
+    @Then("扫描条码结果为")
+    public void 扫描条码结果为(String content) throws JSONException {
+        HttpMethod httpMethod = HttpMethod.valueOf("POST");
+        response = RestfulHelper.connect(port).require(httpMethod, "/scan", new Gson().toJson(scanData));
+        JSONAssert.assertEquals(content, response.getBody(), false);
     }
 }
