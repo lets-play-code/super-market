@@ -8,7 +8,7 @@ import org.testcontainers.utility.DockerImageName;
 
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
 public class DataSourceConfig {
 
     @Bean
@@ -20,7 +20,7 @@ public class DataSourceConfig {
                 .driverClassName(sqlContainer.getDriverClassName())
                 .username(sqlContainer.getUsername())
                 .password(sqlContainer.getPassword())
-                .url(sqlContainer.getJdbcUrl() + "?characterEncoding=utf-8")
+                .url(sqlContainer.getJdbcUrl() )
                 .build();
         return dataSource;
     }

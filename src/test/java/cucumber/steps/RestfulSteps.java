@@ -73,12 +73,12 @@ public class RestfulSteps {
 
     @And("有商品")
     public void 有商品(List<Map<String, String>> items) {
-        /*itemFactory.clear();
+        itemFactory.clear();
         items.forEach(itemMap -> {
             Item item = new Item(itemMap.get("条码"),
                     itemMap.get("名称"), itemMap.get("单位"), Double.parseDouble(itemMap.get("价格")), itemMap.get("类型"));
             itemFactory.save(item);
-        });*/
+        });
     }
 
     @Then("扫描条码结果为")
