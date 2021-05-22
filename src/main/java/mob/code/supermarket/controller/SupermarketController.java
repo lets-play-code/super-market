@@ -1,6 +1,7 @@
 package mob.code.supermarket.controller;
 
 import mob.code.supermarket.bean.Item;
+import mob.code.supermarket.bean.Receipt;
 import mob.code.supermarket.dao.ItemDao;
 import mob.code.supermarket.dto.Response;
 import mob.code.supermarket.legacy.BarcodeReader;
@@ -52,8 +53,10 @@ public class SupermarketController {
         //1、barcodes->获取goods List
         //2、goods List->构建receipt
         //3、receipt打印
+        Receipt receipt = new Receipt();
+        List<String> strings = receipt.print();
 
-        List<String> strings = Arrays.asList(
+        strings = Arrays.asList(
                 "****** SuperMarket receipt ******",
                 "pizza: 1 x 15.00 --- 15.00",
                 "milk: 3(L) x 12.30 --- 36.90",
