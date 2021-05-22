@@ -20,4 +20,7 @@ public class Order {
     private String message;
     private String inBarcode;
 
+    public double getAmount() {
+        return price * quantity;
+    }
 }

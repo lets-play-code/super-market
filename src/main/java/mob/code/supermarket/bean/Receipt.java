@@ -36,15 +36,15 @@ public class Receipt {
     private String printOrder(Order order) {
         return String.format(
                 "%s: %s x %.2f --- %.2f",
-                order.getItem().getName(),
+                order.getName(),
                 printQuantity(order),
-                order.getItem().getPrice(),
+                order.getPrice(),
                 order.getAmount()
         );
     }
 
     private String printQuantity(Order order) {
-        String unit = order.getItem().getUnit().equals("") ? "" : format("(%s)", order.getItem().getUnit());
+        String unit = order.getUnit().equals("") ? "" : format("(%s)", order.getUnit());
         return format("%d", order.getQuantity()) + unit;
     }
 }

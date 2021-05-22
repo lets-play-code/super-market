@@ -1,9 +1,8 @@
 package mob.code.supermarket.service;
 
 import mob.code.supermarket.bean.Order;
-import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Ignore;
+import org.junit.Test;
 
 /**
  * description: ItemServiceTest <br>
@@ -15,7 +14,8 @@ public class ItemServiceTest {
 
     ItemService itemService = new ItemService();
     @Test
-    void given_barcode_then_order() {
+    @Ignore
+    public void given_barcode_then_order() {
         String inbarcode = "12345678";
         Order order = itemService.makeOrder(inbarcode);
     }
