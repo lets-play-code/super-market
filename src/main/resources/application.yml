@@ -1,0 +1,18 @@
+# springboot整合postgres连接配制
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/postgres
+    username: postgres
+    password: supermarket
+    driver-class-name: org.postgresql.Driver
+  #解决整合后报的一个错：<aused by: java.sql.SQLFeatureNotSupportedException: 这个 org.postgresql.jdbc.PgConnection.createClob() 方法尚未被实作。>
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: none
+
+

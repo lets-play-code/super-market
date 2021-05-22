@@ -5,6 +5,9 @@ plugins {
     id 'java'
 }
 
+def mybatis_plus_version = "3.1.2"
+def druid_version = "1.1.23"
+def fastjson_version = "1.2.73"
 apply plugin: 'io.spring.dependency-management'
 
 group = 'xp.tdd.supermarket'
@@ -40,6 +43,7 @@ dependencies {
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testCompile "org.testcontainers:testcontainers:1.15.1"
     testCompile "org.testcontainers:postgresql:1.15.1"
+      compile "com.alibaba:fastjson:${fastjson_version}"
 }
 
 test {

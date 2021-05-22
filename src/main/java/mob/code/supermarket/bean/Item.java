@@ -1,5 +1,6 @@
 package mob.code.supermarket.bean;
 
+
 public class Item {
     private String barcode;
     private String name;
