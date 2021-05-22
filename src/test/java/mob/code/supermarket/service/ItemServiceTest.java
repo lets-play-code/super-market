@@ -2,7 +2,7 @@ package mob.code.supermarket.service;
 
 import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.bean.Order;
-import mob.code.supermarket.dao.ItemDao;
+import mob.code.supermarket.dao.ItemRepository;
 import mob.code.supermarket.model.SupermarketException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,32 +36,34 @@ public class ItemServiceTest {
     public ExpectedException expectedException = ExpectedException.none();
 
     @InjectMocks
-    ItemService itemService;
+    private ItemService itemService;
+
     @Mock
-    ItemDao itemDao;
+    private ItemRepository itemRepository;
 
     @Test
     public void given_barcode_then_order() {
-        String inbarcode = "12345678";
+        String inBarcode = "12345678";
         Item item = new Item("12345", "apple", "cn", 2.2d, "1");
-        given(itemDao.getItem(Mockito.any())).willReturn(Optional.of(item));
-        Order order = itemService.makeOrder(inbarcode);
-        Order order1 = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", 1);
-        assertThat(order, is(order1));
+        given(itemRepository.getByBarcode(inBarcode)).willReturn(Optional.of(item));
+        Order order = itemService.makeOrder(inBarcode);
+        Order expectedOrder = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", 1);
+        assertThat(order, is(expectedOrder));
     }
 
     @Test
     public void when_barcode_with_3_qty_then_order_count_3() {
         String barcode = "22345678-3";
         Item item = new Item("22345678", "milk", "L", 15.0d, "1");
-        given(itemDao.getItem(Mockito.any())).willReturn(Optional.of(item));
+        given(itemRepository.getByBarcode("22345678")).willReturn(Optional.of(item));
         Order order = itemService.makeOrder(barcode);
         assertThat(order, is(new Order("22345678", "milk", "L", 15.0d, "", 3)));
     }
 
     @Test
     public void when_2_barcode_then_2_order() {
-        given(itemDao.getItem(Mockito.anyString())).willReturn(Optional.of(new Item("22345678", "milk", "L", 15.0d, "1")));
+        given(itemRepository.getByBarcode(Mockito.anyString()))
+                .willReturn(Optional.of(new Item("22345678", "milk", "L", 15.0d, "1")));
         List<Order> orders = itemService.makeOrders(Arrays.asList("", ""));
         assertThat(2, is(orders.size()));
 
@@ -69,7 +71,6 @@ public class ItemServiceTest {
 
     @Test
     public void should_throw_Supermarket_Exception_when_the_barcode_is_not_exist() {
-        given(itemDao.getItem(Mockito.anyString())).willReturn(Optional.empty());
         expectedException.expect(SupermarketException.class);
         String errorBarcode = "barcodeNotExist";
         expectedException.expectMessage(format("item doesn't exist: %s", errorBarcode));

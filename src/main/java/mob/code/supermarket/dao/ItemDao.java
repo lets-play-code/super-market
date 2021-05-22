@@ -1,15 +1,16 @@
 package mob.code.supermarket.dao;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import mob.code.supermarket.bean.Item;
-import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,18 +52,17 @@ public class ItemDao {
 
     public Optional<Item> getItem(String barcode) {
         List<Item> sampleItems = getSampleItems();
-//        System.out.println( sampleItems);
-        Optional<Item> first = sampleItems.stream().peek(item-> System.out.println(item.getBarcode())).filter(item -> barcode.equals(item.getBarcode())).findFirst();
+        Optional<Item> first = sampleItems.stream().peek(item -> System.out.println(item.getBarcode())).filter(item -> barcode.equals(item.getBarcode())).findFirst();
 
         return first;
     }
 
     public BarcodeAndCount parseBarcode(String barcode) {
         String[] split = barcode.split("-");
-        if(split.length==1) {
-          return  new BarcodeAndCount(barcode,1);
-        }else{
-          return  new BarcodeAndCount(split[0],Integer.parseInt(split[1]));
+        if (split.length == 1) {
+            return new BarcodeAndCount(barcode, 1);
+        } else {
+            return new BarcodeAndCount(split[0], Integer.parseInt(split[1]));
         }
     }
 

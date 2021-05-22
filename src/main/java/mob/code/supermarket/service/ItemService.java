@@ -4,6 +4,7 @@ import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.dao.BarcodeAndCount;
 import mob.code.supermarket.dao.ItemDao;
+import mob.code.supermarket.dao.ItemRepository;
 import mob.code.supermarket.model.SupermarketException;
 import org.springframework.stereotype.Service;
 
@@ -23,14 +24,17 @@ import static java.lang.String.format;
 public class ItemService {
 
     private final ItemDao itemDao;
+    private final ItemRepository itemRepository;
 
-    public ItemService(ItemDao itemDao) {
+    public ItemService(ItemDao itemDao, ItemRepository itemRepository) {
         this.itemDao = itemDao;
+        this.itemRepository = itemRepository;
     }
 
     public Order makeOrder(String inbarcode) {
         BarcodeAndCount barcodeAndCount = parseBarcode(inbarcode);
-        Optional<Item> items = itemDao.getItem(barcodeAndCount.getBarcode());
+//        Optional<Item> items = itemDao.getItem(barcodeAndCount.getBarcode());
+        Optional<Item> items = itemRepository.getByBarcode(barcodeAndCount.getBarcode());
         Item item = items.orElseThrow(() -> new SupermarketException(format("item doesn't exist: %s", inbarcode)));
         return Order.create(item, barcodeAndCount.getCount());
     }
