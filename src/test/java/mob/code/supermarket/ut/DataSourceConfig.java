@@ -8,12 +8,12 @@ import org.testcontainers.utility.DockerImageName;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() {
-        DockerImageName dockerImageName = DockerImageName.parse("postgres:11.12");
+        DockerImageName dockerImageName = DockerImageName.parse("postgres:9.6");
         PostgreSQLContainer sqlContainer = new PostgreSQLContainer(dockerImageName);
         sqlContainer.start();
         DataSource dataSource = DataSourceBuilder.create()
