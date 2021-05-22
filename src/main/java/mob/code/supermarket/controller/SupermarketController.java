@@ -41,14 +41,11 @@ public class SupermarketController {
     @PostMapping("scan")
     public Response<List<String>> scan(@RequestBody List<String> barcodes) {
         // 1. code 数量
-        List<Barcode> barcodeList = barcodes
-                .stream()
-                .map(Barcode::fromBarcodeString)
-                .collect(Collectors.toList());
+        List<Barcode> barcodes1 = Barcode.readBarcodes(barcodes);
 
         // 2. code -> 商品
         // 3. 商品 -> 收据条目
-        List<ReceiptItem> receiptItemList = barcodeList.stream().map(x -> {
+        List<ReceiptItem> receiptItemList = barcodes1.stream().map(x -> {
             Item item = itemDao.getItem(x.getCode());
             if (Objects.isNull(item)) {
                 throw new SupermarketException("item doesn't exist: " + x.getCode());
