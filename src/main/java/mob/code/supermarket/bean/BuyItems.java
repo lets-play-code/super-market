@@ -14,7 +14,7 @@ public class BuyItems {
     public Stream<BuyItem> toList() {
         return items.stream()
                 .map(BuyItem::from)
-                .collect(Collectors.groupingBy(BuyItem::getBarcode, Collectors.summingDouble( BuyItem::getCount)))
+                .collect(Collectors.groupingBy(BuyItem::getBarcode))
                 .entrySet()
                 .stream().map(entry -> new BuyItem(entry.getKey(), entry.getValue()));
     }

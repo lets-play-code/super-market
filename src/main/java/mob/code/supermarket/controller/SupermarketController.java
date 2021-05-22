@@ -24,7 +24,7 @@ public class SupermarketController {
                 .toList()
                 .map(buyItem -> {
                     Item item = itemRepository.findByBarcode(buyItem.getBarcode()).orElseThrow(() -> new ItemNotFoundException(buyItem.getBarcode()));
-                    return new ReceiptItem(item.getName(), buyItem.getCount(), item.getPrice(), item.getUnit(), item.getType());
+                    return new ReceiptItem(item.getName(), buyItem.getCount(), item.getPrice(), item.getUnit(), item.getType(),buyItem);
                 }).collect(Collectors.toList());
         Receipt receipt = Receipt.of(receiptItems);
         return Response.of(receipt.output());

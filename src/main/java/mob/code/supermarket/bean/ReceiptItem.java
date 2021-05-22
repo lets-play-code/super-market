@@ -2,6 +2,7 @@ package mob.code.supermarket.bean;
 
 import org.springframework.util.StringUtils;
 
+import java.lang.invoke.WrongMethodTypeException;
 import java.util.Optional;
 
 public class ReceiptItem {
@@ -11,12 +12,18 @@ public class ReceiptItem {
     private final String unit;
     private final String type;
 
-    public ReceiptItem(String name, double count, double price, String unit, String type) {
+    public ReceiptItem(String name, double count, double price, String unit, String type, BuyItem buyItem) {
         this.name = name;
         this.count = count;
         this.price = price;
         this.unit = unit;
         this.type = type;
+        if (type.equals("0")) {
+            new Quantity(this.count).assertIsInteger(buyItem.getBarcode());
+        }
+        if (type.equals("1")) {
+            new Quantity(this.count).assertLegal(buyItem.getBarcode());
+        }
     }
 
     public String format() {

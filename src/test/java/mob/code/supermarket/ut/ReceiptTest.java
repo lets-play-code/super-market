@@ -1,5 +1,6 @@
 package mob.code.supermarket.ut;
 
+import mob.code.supermarket.bean.BuyItem;
 import mob.code.supermarket.bean.Receipt;
 import mob.code.supermarket.bean.ReceiptItem;
 import org.junit.Test;
@@ -12,6 +13,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ReceiptTest {
+    public static final BuyItem BUY_ITEM = new BuyItem("", 1,"1123-1");
     private String header = "****** SuperMarket receipt ******";
     private String footer = "*********************************";
     private String split = "---------------------------------";
@@ -26,30 +28,31 @@ public class ReceiptTest {
 
     @Test
     public void 当有一个商品() throws Exception {
-        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("pizza", 1, 15.00, "", type)));
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("pizza", 1, 15.00, "", type, BUY_ITEM)));
         assertThat(receipt.output(), is(Arrays.asList(header, "pizza: 1 x 15.00 --- 15.00", split, "total: 15.00(CNY)", footer)));
     }
 
     @Test
     public void 当有一个商品带有单位() throws Exception {
-        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 1, 15.00, "L", type)));
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 1, 15.00, "L", type, BUY_ITEM)));
         assertThat(receipt.output(), is(Arrays.asList(header, "milk: 1(L) x 15.00 --- 15.00", split, "total: 15.00(CNY)", footer)));
     }
 
     @Test
     public void 当有1个商品有2份() throws Exception {
-        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 2, 15.00, "L", type)));
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 2, 15.00, "L", type, BUY_ITEM)));
         assertThat(receipt.output(), is(Arrays.asList(header, "milk: 2(L) x 15.00 --- 30.00", split, "total: 30.00(CNY)", footer)));
     }
 
     @Test
     public void 当类型是1的时候数量保留1位() throws Exception {
-        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 2.2, 15.00, "L", "1")));
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 2.2, 15.00, "L", "1", BUY_ITEM)));
         assertThat(receipt.output().get(1), is("milk: 2.2(L) x 15.00 --- 33.00"));
     }
+
     @Test
     public void 当类型是1的时候数量小数超过2保留1位() throws Exception {
-        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 2.200001, 15.00, "L", "1")));
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 2.2000000001, 15.00, "L", "1", BUY_ITEM)));
         assertThat(receipt.output().get(1), is("milk: 2.2(L) x 15.00 --- 33.00"));
     }
 }
