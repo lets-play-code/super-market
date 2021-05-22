@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -79,10 +80,6 @@ public class SupermarketControllerTest {
     @Sql(scripts = "start.sql")
     public void test_scan() throws Exception {
         dbsetUp("/Users/georgewu/workbench/kata/super-market/src/test/java/mob/code/supermarket/test.xml");
-        List<String> input = List.of(
-                "12345678",
-                "22345678-3"
-        );
 
         String requestJson = "[\n" +
                 "\"12345678\",\n" +
@@ -91,7 +88,7 @@ public class SupermarketControllerTest {
 
         String expectedResponseJson = "{\"data\":[\"****** SuperMarket receipt ******\",\"pizza: 1 x 15.00 --- 15.00\",\"milk: 3(L) x 12.30 --- 36.90\",\"---------------------------------\",\"total: 51.90(CNY)\",\"*********************************\"],\"error\":null}";
 
-        String actualResponseJson = mockMvc.perform(post("/scan", requestJson))
+        String actualResponseJson = mockMvc.perform(post("/scan").contentType(MediaType.APPLICATION_JSON).content(requestJson))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()

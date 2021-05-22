@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding="utf-8"?>
 <dataset>
-    <item barcode="12345678" name="pizza" price="15.11" type="0" unit=" "/>
-    <item barcode="22345678" name="milk" price="12.01" type="1" unit="L"/>
+    <item barcode="12345678" name="pizza" price="15.00" type="0" unit=" "/>
+    <item barcode="22345678" name="milk" price="12.30" type="1" unit="L"/>
 </dataset>

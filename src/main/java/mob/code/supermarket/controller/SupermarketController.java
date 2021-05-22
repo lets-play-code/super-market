@@ -9,6 +9,7 @@ import mob.code.supermarket.model.ReceiptItem;
 import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,7 +48,7 @@ public class SupermarketController {
     }
 
     @PostMapping("scan")
-    public Response<String[]> scan() {
+    public Response<String[]> scan(@RequestBody String[] barcodes) {
 
         /*
         1. code -> goods + quantity
@@ -55,19 +56,17 @@ public class SupermarketController {
         3. receipt formatting
          */
 
-        List<String> codes;
-
-
-//        List<ReceiptItem> receiptItems;
-//        Receipt receipt = new Receipt();
-//        receipt.format(receiptItems);
-
-        Item pizza = new Item("12345678", "pizza", "", 15.00, "0");
-        Item milk = new Item("22345678", "milk", "L", 12.30, "0");
-
         Receipt receipt = new Receipt();
-        receipt.add(new ReceiptItem(pizza, 1));
-        receipt.add(new ReceiptItem(milk, 3));
+        for (String scan : barcodes) {
+            String[] split = scan.split("-");
+            String barcode = split[0];
+            int quantity = 1;
+            if (split.length > 1) {
+                quantity = Integer.parseInt(split[1]);
+            }
+            Item item = itemDao.findByBarcode(barcode);
+            receipt.add(new ReceiptItem(item, quantity));
+        }
         String[] format = receipt.format();
         return Response.of(format);
     }
