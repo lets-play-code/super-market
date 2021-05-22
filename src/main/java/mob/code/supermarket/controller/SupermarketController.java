@@ -41,23 +41,27 @@ public class SupermarketController {
     @PostMapping("scan")
     public Response<List<String>> scan(@RequestBody List<String> barcodes) {
         // 1. code 数量
-        List<Barcode> barcodes1 = Barcode.readBarcodes(barcodes);
+        List<Barcode> mergedBarcodes = Barcode.readBarcodes(barcodes);
 
         // 2. code -> 商品
         // 3. 商品 -> 收据条目
-        List<ReceiptItem> receiptItemList = barcodes1.stream().map(x -> {
-            Item item = itemDao.getItem(x.getCode());
-            if (Objects.isNull(item)) {
-                throw new SupermarketException("item doesn't exist: " + x.getCode());
-            }
-            return new ReceiptItem(item.getName(), x.getNumber(), BigDecimal.valueOf(item.getPrice()), item.getUnit());
-        }).collect(Collectors.toList());
+        List<ReceiptItem> receiptItemList = mergedBarcodes.stream()
+                .map(this::getReceiptItem)
+                .collect(Collectors.toList());
 
 
         // 4. 格式化输出
         Receipt receipt = new Receipt();
         receipt.addAll(receiptItemList);
         return Response.of(receipt.toResult());
+    }
+
+    private ReceiptItem getReceiptItem(Barcode x) {
+        Item item = itemDao.getItem(x.getCode());
+        if (Objects.isNull(item)) {
+            throw new SupermarketException("item doesn't exist: " + x.getCode());
+        }
+        return new ReceiptItem(item.getName(), x.getNumber(), BigDecimal.valueOf(item.getPrice()), item.getUnit());
     }
 
     @PostMapping("tryBarCode")
