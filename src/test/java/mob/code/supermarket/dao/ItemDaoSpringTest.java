@@ -1,6 +1,8 @@
 package mob.code.supermarket.dao;
 
 import mob.code.supermarket.bean.Item;
+import mob.code.supermarket.bean.Order;
+import mob.code.supermarket.service.ItemService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,8 @@ public class ItemDaoSpringTest {
     @Autowired
     ItemDao itemDao;
 
+    @Autowired
+    ItemService itemService;
 
 
     //@Test
@@ -56,7 +60,15 @@ public class ItemDaoSpringTest {
         assertThat(barcodeAndCount.getCount(),is(count));
     }
 
+    @Test
+    public void given_inbarcode_then_order() {
+        String inbarcode = "12345678";
+        Order order = itemService.makeOrder(inbarcode);
 
+    }
 
+    @Test
+    public void given_barcodelist_then_orderlist() {
 
+    }
 }
