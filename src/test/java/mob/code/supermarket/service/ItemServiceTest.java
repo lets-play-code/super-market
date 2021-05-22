@@ -1,8 +1,25 @@
 package mob.code.supermarket.service;
 
+import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.bean.Order;
-import org.junit.Ignore;
+import mob.code.supermarket.dao.ItemDao;
+import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.junit.Assert.assertThat;
+
 
 /**
  * description: ItemServiceTest <br>
@@ -10,13 +27,40 @@ import org.junit.Test;
  * author: Feng_001 <br>
  * version: 1.0 <br>
  */
+@RunWith(MockitoJUnitRunner.class)
+
 public class ItemServiceTest {
 
-    ItemService itemService = new ItemService();
+
+    @InjectMocks
+    ItemService itemService;
+    @Mock
+    ItemDao itemDao;
+
     @Test
-    @Ignore
-    public void given_barcode_then_order() {
+   public void given_barcode_then_order() {
         String inbarcode = "12345678";
+        Item item = new Item("12345", "apple", "cn", 2.2d, "1");
+        given(itemDao.getItem(Mockito.any())).willReturn(Optional.of(item));
         Order order = itemService.makeOrder(inbarcode);
+        Order order1 = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", 1, "", inbarcode);
+        assertThat(order,is(order1));
+    }
+
+    @Test
+    public void when_barcode_with_3_qty_then_order_count_3() {
+        String barcode = "22345678-3";
+        Item item = new Item("22345678", "milk", "L", 15.0d, "1");
+        given(itemDao.getItem(Mockito.any())).willReturn(Optional.of(item));
+        Order order = itemService.makeOrder(barcode);
+        assertThat(order, is(new Order("22345678", "milk", "L", 15.0d,"", 3, "", barcode)));
+    }
+
+    @Test
+    public void when_2_barcode_then_2_order() {
+        given(itemDao.getItem(Mockito.anyString())).willReturn(Optional.of(new Item("22345678", "milk", "L", 15.0d, "1")));
+        List<Order> orders = itemService.makeOrders(Arrays.asList("", ""));
+        assertThat(2, is(orders.size()));
+
     }
 }
