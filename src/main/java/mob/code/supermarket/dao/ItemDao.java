@@ -4,9 +4,11 @@ import com.fasterxml.jackson.databind.util.JSONPObject;
 import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.model.SupermarketException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +28,11 @@ public class ItemDao {
     @Value("${spring.datasource.password}")
     private String dbPassword;
 
+    @Autowired
+    private DataSource dataSource;
+
     public List<Item> getSampleItems() {
-        try (Connection conn = DriverManager.getConnection(jdbcUrl,
-                dbUser, dbPassword); Statement stmt = conn.createStatement()) {
+        try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
             ArrayList<Item> items = new ArrayList<>();
             ResultSet rs = stmt.executeQuery("select * from item limit 3");
             while (rs.next()) {

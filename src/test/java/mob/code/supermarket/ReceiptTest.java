@@ -1,9 +1,7 @@
 package mob.code.supermarket;
 
-import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.bean.Receipt;
-import org.apache.commons.compress.archivers.ar.ArArchiveEntry;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -21,12 +19,10 @@ public class ReceiptTest {
         //given
         //        result.add("pizza: 1 x 15.00 --- 15.00");
         //        result.add("milk: 3(L) x 12.30 --- 36.90");
-        Item pizza = new Item("123", "pizza", "", 15, "0");
-        Item milk = new Item("1234", "milk", "L", 12.30, "1");
         Receipt receipt = new Receipt(Arrays.asList(
-                new Order(pizza, 1),
-                new Order(milk, 3))
-        );
+                new Order("123", "pizza", "", 15, "0", 1, null, null),
+                new Order("1234", "milk", "L", 12.30, "1", 3, null, null)
+        ));
 
         //when
         List<String> printContent = receipt.print();
