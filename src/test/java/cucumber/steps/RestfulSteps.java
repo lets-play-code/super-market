@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,7 +80,7 @@ public class RestfulSteps {
         itemFactory.clear();
         items.forEach(itemMap -> {
             Item item = new Item(itemMap.get("条码"),
-                    itemMap.get("名称"), itemMap.get("单位"), Double.parseDouble(itemMap.get("价格")), itemMap.get("类型"));
+                    itemMap.get("名称"), itemMap.get("单位"), new BigDecimal(itemMap.get("价格")), itemMap.get("类型"));
             itemRepository.save(item);
         });
     }
