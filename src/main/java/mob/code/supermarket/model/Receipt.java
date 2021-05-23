@@ -5,10 +5,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Receipt {
-    private final List<ReceiptItem> items = new ArrayList<>();
+    private final List<ReceiptItem> items;
     public static final String HEADER = "****** SuperMarket receipt ******";
     public static final String SEPARATOR = "---------------------------------";
     public static final String FOOTER = "*********************************";
+
+    public Receipt(List<ReceiptItem> items) {
+        this.items = items;
+    }
+
+    public Receipt() {
+        this.items = new ArrayList<>();
+    }
 
     public String[] format() {
         List<String> result = new ArrayList<>();
@@ -34,7 +42,4 @@ public class Receipt {
                 .sum();
     }
 
-    public void add(ReceiptItem item) {
-        items.add(item);
-    }
 }

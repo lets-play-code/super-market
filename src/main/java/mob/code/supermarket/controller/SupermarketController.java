@@ -10,8 +10,10 @@ import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/")
@@ -49,25 +51,16 @@ public class SupermarketController {
 
     @PostMapping("scan")
     public Response<String[]> scan(@RequestBody String[] barcodes) {
+        List<ReceiptItem> receiptItems = Arrays.stream(barcodes)
+                .map(this::getReceiptItem)
+                .collect(Collectors.toList());
+        Receipt receipt = new Receipt(receiptItems);
+        return Response.of(receipt.format());
+    }
 
-        /*
-        1. code -> goods + quantity
-        2. goods + quantity -> receipt items
-        3. receipt formatting
-         */
-
-        Receipt receipt = new Receipt();
-        for (String scan : barcodes) {
-            String[] split = scan.split("-");
-            String barcode = split[0];
-            int quantity = 1;
-            if (split.length > 1) {
-                quantity = Integer.parseInt(split[1]);
-            }
-            Item item = itemDao.findByBarcode(barcode);
-            receipt.add(new ReceiptItem(item, quantity));
-        }
-        String[] format = receipt.format();
-        return Response.of(format);
+    private ReceiptItem getReceiptItem(String scan) {
+        BarcodeParser barcodeParser = new BarcodeParser(scan);
+        Item item = itemDao.findByBarcode(barcodeParser.getBarCode());
+        return new ReceiptItem(item, barcodeParser.getQuantity());
     }
 }
