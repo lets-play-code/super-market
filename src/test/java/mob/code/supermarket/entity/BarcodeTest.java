@@ -1,5 +1,6 @@
 package mob.code.supermarket.entity;
 
+import mob.code.supermarket.model.SupermarketException;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,6 +15,16 @@ public class BarcodeTest {
         Barcode actual = Barcode.readBarcode("12345678");
         assertThat(actual.getCode(), is("12345678"));
         assertThat(actual.getNumber(), is(1f));
+    }
+
+    @Test(expected = SupermarketException.class)
+    public void 解析BarCode非法的输入() {
+        Barcode.readBarcode("12345678-0");
+    }
+
+    @Test(expected = SupermarketException.class)
+    public void 解析BarCode非法的输入小数位超长() {
+        Barcode.readBarcode("12345678-1.11");
     }
 
     @Test

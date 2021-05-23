@@ -32,6 +32,9 @@ public class Barcode {
      * @return
      */
     private static boolean isWrongCount(String count) {
+        if (Float.parseFloat(count) == 0.0f) {
+            throw new SupermarketException("");
+        }
         String[] parts = count.split("\\.");
         return parts.length > 1 && parts[1].length() > 1;
     }

@@ -8,17 +8,15 @@ import java.util.stream.Stream;
 public class BarcodeReader {
 
     List<StringBuilder> symbols;
-    public List<String> barcodes;
+    public List<String> barcodes = new ArrayList<>();
     private static final int NB_CHARS_BY_LINE = 27;
     public static final String SA =
-            " _ | ||_|   |  |   _  _||_  _  _| _|   |_|  |" +
-            " _ |_  _| _ |_ |_| _   |  | _ |_||_| _ |_| _|";
+            " _ | ||_|   |  |   _  _||_  _  _| _|   |_|  | _ |_  _| _ |_ |_| _   |  | _ |_||_| _ |_| _|";
 
     public static BarcodeReader barcodeFactory() {
         BarcodeReader barcode = new BarcodeReader();
         barcode.initSymbols();
-        barcode.barcodes = new ArrayList<>();
-        return  barcode;
+        return barcode;
     }
 
     private void initSymbols() {
@@ -30,7 +28,7 @@ public class BarcodeReader {
     private void storeTheNumber() {
         StringBuilder n = new StringBuilder();
         symbols.stream().filter(s -> s.length() != 0).forEach(s ->
-            n.append(String.valueOf(getSymbolFromStringRepresentation(s.toString())))
+                n.append(getSymbolFromStringRepresentation(s.toString()))
         );
         barcodes.add(n.toString());
     }
@@ -49,26 +47,25 @@ public class BarcodeReader {
         // Print the account list
     }
 
-    public void getBarcode(String in) {
+    public List<String> getBarcode(String in) {
         // Read from string
         // read the line by 4-tuple
-        String [] entryLines = in.split("\n");
+        String[] entryLines = in.split("\n");
         for (int i = 0; i < entryLines.length; i++) {
-            if(((i+1) % 4) != 0) {
+            if (((i + 1) % 4) != 0) {
                 splitLineAndFillAccounts(entryLines[i]);
             } else {
                 storeTheNumber();
                 initSymbols();
             }
         }
-        barcodes.stream().forEach(a -> System.out.println(a));
+        barcodes.forEach(System.out::println);
+        return barcodes;
     }
 
-   private void splitLineAndFillAccounts(String stringLine) {
-
-        for (int i = 3, j = 0; i <= stringLine.length(); i+=3, j++) {
-            symbols.get(j).append(stringLine.substring(i-3, i));
-
+    private void splitLineAndFillAccounts(String stringLine) {
+        for (int i = 3, j = 0; i <= stringLine.length(); i += 3, j++) {
+            symbols.get(j).append(stringLine.substring(i - 3, i));
         }
-   }
+    }
 }
