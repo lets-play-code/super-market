@@ -10,7 +10,7 @@ public class BarcodeParser {
     public BarcodeParser(String[] barcodes) {
         barcodeList = Arrays.stream(barcodes)
                 .map(QuantifiedBarcode::new)
-                .collect(Collectors.groupingBy(QuantifiedBarcode::getBarCode, Collectors.summarizingInt(QuantifiedBarcode::getQuantity)))
+                .collect(Collectors.groupingBy(QuantifiedBarcode::getBarCode, Collectors.summarizingDouble(QuantifiedBarcode::getQuantity)))
                 .entrySet()
                 .stream()
                 .map(entry -> new QuantifiedBarcode(entry.getKey(), entry.getValue().getSum()))

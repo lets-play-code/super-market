@@ -24,13 +24,17 @@ public class ItemService {
         List<ReceiptItem> receiptItems = barcodeList.stream()
                 .map(barcodeItem -> {
                     String barcode = barcodeItem.getBarCode();
-                    Item item = itemRepository.findByBarcode(barcode)
-                            .orElseThrow(() -> new SupermarketException(String.format("item doesn't exist: %s", barcode)));
+                    Item item = getItem(barcode);
                     return new ReceiptItem(item, barcodeItem.getQuantity());
                 })
                 .collect(Collectors.toList());
         Receipt receipt = new Receipt(receiptItems);
         return receipt.format();
+    }
+
+    private Item getItem(String barcode) {
+        return itemRepository.findByBarcode(barcode)
+                .orElseThrow(() -> new SupermarketException(String.format("item doesn't exist: %s", barcode)));
     }
 
 }

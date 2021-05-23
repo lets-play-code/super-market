@@ -5,32 +5,32 @@ import org.springframework.util.StringUtils;
 
 public class ReceiptItem {
     private String name;
-    private int quantity;
+    private double quantity;
     private double price;
     private Item item;
     private String unit;
 
-    public ReceiptItem(String name, int quantity, double price, String unit) {
+    public ReceiptItem(String name, double quantity, double price, String unit) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
         this.unit = unit;
     }
 
-    public ReceiptItem(String name, int quantity, double price) {
+    public ReceiptItem(String name, double quantity, double price) {
         this.name = name;
         this.quantity = quantity;
         this.price = price;
     }
 
-    public ReceiptItem(Item item, int quantity) {
+    public ReceiptItem(Item item, double quantity) {
         this.name = item.getName();
         this.price = item.getPrice();
         this.unit = item.getUnit();
         this.quantity = quantity;
     }
 
-    public int getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
@@ -47,7 +47,7 @@ public class ReceiptItem {
     }
 
     String format() {
-        return String.format("%s: %d%s x %.2f --- %.2f",
+        return String.format("%s: %.0f%s x %.2f --- %.2f",
                 getName(),
                 getQuantity(),
                 getUnit(),
