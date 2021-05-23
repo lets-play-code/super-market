@@ -76,3 +76,21 @@ Feature: 二维码扫描结果
       "error": "wrong quantity of 22345678"
     }
     """
+
+  Scenario: 条码不对抛出异常
+    When 条码扫描数据有
+      """
+      [
+        " _ ",
+        " _ ",
+        "|_ ",
+        ""
+        ]
+      """
+    Then 扫描条码结果为
+    """
+     {
+      "data": null,
+      "error": "can not recognize barcode:\n _ \n _ \n|_ \n"
+    }
+    """

@@ -16,6 +16,6 @@ public class BarCodeException extends RuntimeException {
 
     @Override
     public String getMessage() {
-        return "can not recognize barcode" + this.barCode;
+        return "can not recognize barcode:\n" + this.barCode;
     }
 }
