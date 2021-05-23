@@ -8,10 +8,9 @@ import org.testcontainers.utility.DockerImageName;
 
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
 public class DataSourceConfig {
-
-    //@Bean
+    @Bean
     public DataSource dataSource() {
         DockerImageName dockerImageName = DockerImageName.parse("postgres:9.6");
         PostgreSQLContainer sqlContainer = new PostgreSQLContainer(dockerImageName);
@@ -20,7 +19,7 @@ public class DataSourceConfig {
                 .driverClassName(sqlContainer.getDriverClassName())
                 .username(sqlContainer.getUsername())
                 .password(sqlContainer.getPassword())
-                .url(sqlContainer.getJdbcUrl() )
+                .url(sqlContainer.getJdbcUrl())
                 .build();
         return dataSource;
     }

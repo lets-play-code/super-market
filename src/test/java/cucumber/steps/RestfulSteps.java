@@ -41,7 +41,7 @@ public class RestfulSteps {
     @Autowired
     ItemRepository itemRepository;
     private ResponseEntity<String> response;
-    private List<String> scanData;
+    private String scanData;
 
     @When("I {string} the api {string}")
     public void iCallTheApi(String method, String apiName) {
@@ -71,8 +71,8 @@ public class RestfulSteps {
     }
 
     @Given("条码扫描数据有")
-    public void 条码扫描数据有(List<Map<String, String>> items) {
-        this.scanData = items.stream().map(item -> item.get("条目")).collect(Collectors.toList());
+    public void 条码扫描数据有(String content) {
+        this.scanData = content;
     }
 
     @And("有商品")
@@ -88,7 +88,7 @@ public class RestfulSteps {
     @Then("扫描条码结果为")
     public void 扫描条码结果为(String content) throws JSONException {
         HttpMethod httpMethod = HttpMethod.valueOf("POST");
-        response = RestfulHelper.connect(port).require(httpMethod, "/scan", new Gson().toJson(scanData));
+        response = RestfulHelper.connect(port).require(httpMethod, "/scan", scanData);
         JSONAssert.assertEquals(content, response.getBody(), false);
     }
 }

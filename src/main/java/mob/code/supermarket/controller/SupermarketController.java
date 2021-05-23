@@ -3,6 +3,7 @@ package mob.code.supermarket.controller;
 import mob.code.supermarket.bean.*;
 import mob.code.supermarket.bean.ItemRepository;
 import mob.code.supermarket.dto.Response;
+import mob.code.supermarket.legacy.BarcodeReader;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +21,8 @@ public class SupermarketController {
 
     @PostMapping("scan")
     public Response<List<String>> scan(@RequestBody List<String> items) {
-        List<ReceiptItem> receiptItems = new BuyItems(items)
+        List<String> newItems = BarcodeReader.barcodeFactory().getBarcode(String.join("\n", items));
+        List<ReceiptItem> receiptItems = new BuyItems(newItems)
                 .toItemsStream()
                 .map(buyItem -> {
                     Item item = itemRepository.findByBarcode(buyItem.getBarcode()).orElseThrow(() -> new ItemNotFoundException(buyItem.getBarcode()));
@@ -41,6 +43,7 @@ public class SupermarketController {
     public Response wrongQuantity(WrongQuantityException e) {
         return Response.error(e.getMessage());
     }
+
     @ExceptionHandler(BarCodeException.class)
     public Response barcodeException(BarCodeException e) {
         return Response.error(e.getMessage());

@@ -20,7 +20,4 @@ public class BuyItems {
                 .stream().map(entry -> new BuyItem(entry.getKey(), entry.getValue()));
     }
 
-    public List<String> toNewList(List<String> items) {
-       return BarcodeReader.barcodeFactory().getBarcode(String.join("\n", items));
-    }
 }
