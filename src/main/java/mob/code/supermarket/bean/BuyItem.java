@@ -1,7 +1,6 @@
 package mob.code.supermarket.bean;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
