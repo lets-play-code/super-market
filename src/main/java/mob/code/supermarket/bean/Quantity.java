@@ -43,7 +43,7 @@ public class Quantity {
         return value < DOUBLE_MIN;
     }
 
-    public void assertLegal(String barcode) {
+    public void assertBulkQuantityLegal(String barcode) {
         this.ensureIsInteger(this.value.doubleValue() * 10, barcode);
     }
 

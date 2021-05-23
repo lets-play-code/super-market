@@ -24,14 +24,21 @@ public class ReceiptItem {
         Quantity quantity = this.quantity;
         quantity.ensureNotZero(buyItem.getBarcode());
         if (isPackaged()) {
-            quantity.assertIsInteger(buyItem.getBarcode());
+            checkPackaged(buyItem, quantity);
             return;
         }
+        checkBulk(buyItem, quantity);
+    }
+
+    private void checkBulk(BuyItem buyItem, Quantity quantity) {
         if (!buyItem.hasQuantity()) {
             throw new WrongQuantityException(buyItem.getBarcode());
         }
-        quantity.assertLegal(buyItem.getBarcode());
+        quantity.assertBulkQuantityLegal(buyItem.getBarcode());
+    }
 
+    private void checkPackaged(BuyItem buyItem, Quantity quantity) {
+        quantity.assertIsInteger(buyItem.getBarcode());
     }
 
     public String format() {
@@ -39,10 +46,9 @@ public class ReceiptItem {
     }
 
     private String getUnitPart() {
-        String unitPart = Optional.ofNullable(this.unit)
+        return Optional.ofNullable(this.unit)
                 .filter(str -> !StringUtils.isEmpty(str))
                 .map(u -> "(" + u + ")").orElse("");
-        return unitPart;
     }
 
     private String getQuantity() {
