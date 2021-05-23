@@ -149,11 +149,26 @@ Feature: Scan products
       }
       """
 
+  Scenario: Scan product has wrong individual count
+    When I 'POST' the api '/scan' with
+      """
+      [
+        "12345678-1.5"
+      ]
+      """
+    Then the server response will match
+      """
+      {
+        "data": null,
+        "error": "wrong quantity of 12345678"
+      }
+      """
+
   Scenario: Scan product has wrong count
     When I 'POST' the api '/scan' with
       """
       [
-        "22345678-0"
+        "22345678-"
       ]
       """
     Then the server response will match

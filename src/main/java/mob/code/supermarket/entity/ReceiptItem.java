@@ -29,6 +29,11 @@ public class ReceiptItem {
         if (!isIndividual() && barcode.isNumberUndefined()) {
             throw new SupermarketException("wrong quantity of " + barcode.getCode());
         }
+
+        // 不能有小数，必须是整数
+        if (isIndividual() && !isCountInteger()) {
+            throw new SupermarketException("wrong quantity of " + barcode.getCode());
+        }
     }
 
     public String itemInfo() {
