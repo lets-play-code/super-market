@@ -20,7 +20,6 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.sql.DataSource;
 import java.io.FileInputStream;
 import java.sql.SQLException;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -75,9 +74,8 @@ public class SupermarketControllerTest {
         }
     }
 
-
     @Test
-    @Sql(scripts = "start.sql")
+    @Sql(scripts = "../../../../resources/start.sql")
     public void test_scan() throws Exception {
         dbsetUp("/Users/georgewu/workbench/kata/super-market/src/test/java/mob/code/supermarket/test.xml");
 
@@ -94,6 +92,25 @@ public class SupermarketControllerTest {
                 .getResponse()
                 .getContentAsString();
         assertThat(actualResponseJson).isEqualTo(expectedResponseJson);
-//        JSONAssert.assertEquals(expectedResponseJson, actualResponseJson, false);
+    }
+
+    @Test
+    @Sql(scripts = "../../../../resources/start.sql")
+    public void test_scan_with_error() throws Exception {
+        dbsetUp("/Users/georgewu/workbench/kata/super-market/src/test/java/mob/code/supermarket/test.xml");
+        String requestJson = "[\n" +
+                "\"111\"\n" +
+                "]";
+
+        String expectedResponseJson = "{\"data\":null,\"error\":\"item doesn't exist: 88888888\"}";
+
+        String actualResponseJson = mockMvc.perform(post("/scan")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        assertThat(actualResponseJson).isEqualTo(expectedResponseJson);
     }
 }
