@@ -3,7 +3,6 @@ package mob.code.supermarket.dao;
 import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -50,14 +49,16 @@ public class ItemDao {
         }
     }
 
-    public void saveSampleData() {
-        try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
-            System.out.println("Inserting records into the table...");
-            String sql = "INSERT INTO item VALUES (12345678, 'pizza', '', 15, 0)";
-            stmt.executeUpdate(sql);
-            sql = "INSERT INTO item VALUES (22345678, 'milk', 'L', 12.3, 1)";
-            stmt.executeUpdate(sql);
-            System.out.println("Inserted records into the table...");
+    public void save(Item item) {
+        try (var conn = dataSource.getConnection();
+             var preparedStatement = conn.prepareStatement("INSERT INTO item VALUES (?, ?, ?, ?, ?)")
+        ) {
+            preparedStatement.setString(1, item.getBarcode());
+            preparedStatement.setString(2, item.getName());
+            preparedStatement.setString(3, item.getUnit());
+            preparedStatement.setDouble(4, item.getPrice());
+            preparedStatement.setString(5, item.getType());
+            preparedStatement.executeUpdate();
 
         } catch (SQLException e) {
             throw new SupermarketException(e);
@@ -65,11 +66,9 @@ public class ItemDao {
     }
 
     public void clear() {
-        try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
-            String sql = "delete from item;";
-            stmt.executeUpdate(sql);
-            System.out.println("Deleted records from the table...");
-
+        try (var conn = dataSource.getConnection();
+             var stmt = conn.createStatement()) {
+            stmt.executeUpdate("DELETE FROM item");
         } catch (SQLException e) {
             throw new SupermarketException(e);
         }

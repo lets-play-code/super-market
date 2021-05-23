@@ -1,5 +1,6 @@
 package mob.code.supermarket;
 
+import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.dao.ItemDao;
 import org.junit.After;
 import org.junit.Before;
@@ -33,7 +34,12 @@ public class SupermarketControllerTest {
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
-        itemDao.saveSampleData();
+        initTestData();
+    }
+
+    private void initTestData() {
+        itemDao.save(new Item("12345678", "pizza", "", 15, "0"));
+        itemDao.save(new Item("22345678", "milk", "L", 12.3, "1"));
     }
 
     @After
