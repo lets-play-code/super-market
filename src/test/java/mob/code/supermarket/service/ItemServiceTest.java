@@ -45,7 +45,7 @@ public class ItemServiceTest {
     @Test
     public void given_barcode_then_order() {
         String inBarcode = "12345678";
-        Item item = new Item("12345", "apple", "cn", 2.2d, "1");
+        Item item = new Item("12345", "apple", "cn", 2.2d, "0");
         given(itemRepository.getByBarcode(inBarcode)).willReturn(Optional.of(item));
         List<Order> orders = itemService.makeOrders(Arrays.asList(inBarcode));
         Order expectedOrder = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", BigDecimal.valueOf(1));
@@ -75,7 +75,7 @@ public class ItemServiceTest {
     public void when_2_barcode_then_2_order() {
         given(itemRepository.getByBarcode(Mockito.anyString()))
                 .willReturn(Optional.of(new Item("22345678", "milk", "L", 15.0d, "1")));
-        List<Order> orders = itemService.makeOrders(Arrays.asList("2", "1"));
+        List<Order> orders = itemService.makeOrders(Arrays.asList("2-1", "1-2"));
         assertThat(2, is(orders.size()));
 
     }
@@ -91,7 +91,7 @@ public class ItemServiceTest {
     @Test
     public void when_2_duplicate_barcode_then_return_1_order() {
         given(itemRepository.getByBarcode(Mockito.anyString()))
-                .willReturn(Optional.of(new Item("123456", "water", "L", 15.0d, "1")));
+                .willReturn(Optional.of(new Item("123456", "water", "L", 15.0d, "0")));
         List<Order> orders = itemService.makeOrders(Arrays.asList("123456", "123456"));
         assertThat(orders.size(), is(1));
         assertThat(orders.get(0).getBarcode(), is("123456"));
@@ -120,6 +120,24 @@ public class ItemServiceTest {
         expectedException.expect(SupermarketException.class);
         String errorBarcode = "123-0";
         expectedException.expectMessage(format("wrong quantity of %s", "123"));
+        itemService.makeOrders(Arrays.asList(errorBarcode));
+    }
+    @Test
+    public void should_throw_Supermarket_Exception_when_the_barcode_quantity_is_decimal_and_type_is_0() {
+        given(itemRepository.getByBarcode(Mockito.anyString()))
+                .willReturn(Optional.of(new Item("1234567", "pizza", "", 15.0d, "0")));
+        expectedException.expect(SupermarketException.class);
+        String errorBarcode = "1234567-1.5";
+        expectedException.expectMessage(format("wrong quantity of %s", "1234567"));
+        itemService.makeOrders(Arrays.asList(errorBarcode));
+    }
+    @Test
+    public void should_throw_Supermarket_Exception_when_the_barcode_quantity_is_not_exist_and_type_is_1() {
+        given(itemRepository.getByBarcode(Mockito.anyString()))
+                .willReturn(Optional.of(new Item("01234567", "apple", "", 15.0d, "1")));
+        expectedException.expect(SupermarketException.class);
+        String errorBarcode = "01234567";
+        expectedException.expectMessage(format("wrong quantity of %s", "01234567"));
         itemService.makeOrders(Arrays.asList(errorBarcode));
     }
 

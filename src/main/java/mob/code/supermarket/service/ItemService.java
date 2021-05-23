@@ -15,6 +15,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.ZERO;
 
 /**
  * description: ItemService <br>
@@ -34,25 +36,31 @@ public class ItemService {
     private Order makeOrder(BarcodeAndCount barcodeAndCount) {
         Optional<Item> items = itemRepository.getByBarcode(barcodeAndCount.getBarcode());
         Item item = items.orElseThrow(() -> new SupermarketException(format("item doesn't exist: %s", barcodeAndCount.getInbarcode())));
+        if (item.getType().equals("0") && barcodeAndCount.getCount().remainder(ONE).compareTo(ZERO) != 0) {
+            throw new SupermarketException(format("wrong quantity of %s", item.getBarcode()));
+        }
+        if (item.getType().equals("1") && !barcodeAndCount.getInbarcode().contains("-")) {
+            throw new SupermarketException(format("wrong quantity of %s", item.getBarcode()));
+        }
         return Order.create(item, barcodeAndCount.getCount());
     }
 
     public BarcodeAndCount parseBarcode(String inBarcode) {
         String[] split = inBarcode.split("-");
         if (split.length == 1) {
-            return new BarcodeAndCount(inBarcode, 1,inBarcode);
+            return new BarcodeAndCount(inBarcode, 1, inBarcode);
         }
         String barcode = split[0];
         String quantity = split[1];
         validateQuantity(quantity, barcode);
-        return new BarcodeAndCount(barcode, new BigDecimal(quantity),inBarcode);
+        return new BarcodeAndCount(barcode, new BigDecimal(quantity), inBarcode);
     }
 
     private void validateQuantity(String quantity, String barcode) {
-        if(new BigDecimal(quantity).setScale(1, RoundingMode.FLOOR).compareTo(new BigDecimal(quantity)) != 0) {
+        if (new BigDecimal(quantity).setScale(1, RoundingMode.FLOOR).compareTo(new BigDecimal(quantity)) != 0) {
             throw new SupermarketException(format("wrong quantity of %s", barcode));
         }
-        if(new BigDecimal(quantity).compareTo(BigDecimal.ZERO) == 0) {
+        if (new BigDecimal(quantity).compareTo(ZERO) == 0) {
             throw new SupermarketException(format("wrong quantity of %s", barcode));
         }
     }
@@ -76,7 +84,7 @@ public class ItemService {
         BarcodeAndCount reducedOrder = new BarcodeAndCount();
         BeanUtils.copyProperties(duplicateOrders.get(0), reducedOrder);
         reducedOrder.setCount(duplicateOrders.stream()
-                .map(BarcodeAndCount::getCount).reduce(BigDecimal.ZERO,BigDecimal::add));
+                .map(BarcodeAndCount::getCount).reduce(ZERO, BigDecimal::add));
 
         return reducedOrder;
     }
