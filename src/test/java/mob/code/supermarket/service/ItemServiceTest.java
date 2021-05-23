@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +48,7 @@ public class ItemServiceTest {
         Item item = new Item("12345", "apple", "cn", 2.2d, "1");
         given(itemRepository.getByBarcode(inBarcode)).willReturn(Optional.of(item));
         List<Order> orders = itemService.makeOrders(Arrays.asList(inBarcode));
-        Order expectedOrder = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", 1);
+        Order expectedOrder = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", BigDecimal.valueOf(1));
         assertThat(orders.get(0), is(expectedOrder));
     }
 
@@ -57,8 +58,18 @@ public class ItemServiceTest {
         Item item = new Item("22345678", "milk", "L", 15.0d, "1");
         given(itemRepository.getByBarcode("22345678")).willReturn(Optional.of(item));
         List<Order> orders = itemService.makeOrders(Arrays.asList(barcode));
-        assertThat(orders.get(0), is(new Order("22345678", "milk", "L", 15.0d, "", 3)));
+        assertThat(orders.get(0), is(new Order("22345678", "milk", "L", 15.0d, "", BigDecimal.valueOf(3))));
     }
+
+    @Test
+    public void when_barcode_with_1_5_qty_then_order_count_1_5() {
+        String barcode = "22345678-1.5";
+        Item item = new Item("22345678", "milk", "L", 15.0d, "1");
+        given(itemRepository.getByBarcode("22345678")).willReturn(Optional.of(item));
+        List<Order> orders = itemService.makeOrders(Arrays.asList(barcode));
+        assertThat(orders.get(0).getQuantity(), is(BigDecimal.valueOf(1.5d)));
+    }
+
 
     @Test
     public void when_2_barcode_then_2_order() {
@@ -84,6 +95,21 @@ public class ItemServiceTest {
         List<Order> orders = itemService.makeOrders(Arrays.asList("123456", "123456"));
         assertThat(orders.size(), is(1));
         assertThat(orders.get(0).getBarcode(), is("123456"));
-        assertThat(orders.get(0).getQuantity(), is(2));
+        assertThat(orders.get(0).getQuantity(), is(BigDecimal.valueOf(2)));
     }
+    @Test
+    public void when_2_duplicate_barcodeAndCount_then_return_1_order() {
+        given(itemRepository.getByBarcode(Mockito.anyString()))
+                .willReturn(Optional.of(new Item("123456", "water", "L", 15.0d, "1")));
+        List<Order> orders = itemService.makeOrders(Arrays.asList("123456-2", "123456"));
+        assertThat(orders.size(), is(1));
+        assertThat(orders.get(0).getBarcode(), is("123456"));
+        assertThat(orders.get(0).getQuantity(), is(BigDecimal.valueOf(3)));
+    }
+
+
+
+
+
+
 }

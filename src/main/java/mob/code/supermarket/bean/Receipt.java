@@ -51,6 +51,6 @@ public class Receipt {
 
     private String printQuantity(Order order) {
         String unit = order.getUnit().equals("") ? "" : format("(%s)", order.getUnit());
-        return format("%d", order.getQuantity()) + unit;
+        return format("%s%s", order.getQuantity().toPlainString(), unit);
     }
 }

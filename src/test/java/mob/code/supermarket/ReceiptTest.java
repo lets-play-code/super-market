@@ -4,6 +4,7 @@ import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.bean.Receipt;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,8 +21,8 @@ public class ReceiptTest {
         //        result.add("pizza: 1 x 15.00 --- 15.00");
         //        result.add("milk: 3(L) x 12.30 --- 36.90");
         Receipt receipt = new Receipt(Arrays.asList(
-                new Order("123", "pizza", "", 15, "0", 1),
-                new Order("1234", "milk", "L", 12.30, "1", 3)
+                new Order("123", "pizza", "", 15, "0", BigDecimal.ONE),
+                new Order("1234", "milk", "L", 12.30, "1", BigDecimal.valueOf(3))
         ));
 
         //when

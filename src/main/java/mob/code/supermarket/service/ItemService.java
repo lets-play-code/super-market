@@ -8,6 +8,7 @@ import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,7 @@ public class ItemService {
         if (split.length == 1) {
             return new BarcodeAndCount(barcode, 1,barcode);
         } else {
-            return new BarcodeAndCount(split[0], Integer.parseInt(split[1]),barcode);
+            return new BarcodeAndCount(split[0], new BigDecimal(split[1]),barcode);
         }
     }
 
@@ -63,7 +64,9 @@ public class ItemService {
     private BarcodeAndCount reduceDuplicateOrders(List<BarcodeAndCount> duplicateOrders) {
         BarcodeAndCount reducedOrder = new BarcodeAndCount();
         BeanUtils.copyProperties(duplicateOrders.get(0), reducedOrder);
-        reducedOrder.setCount(duplicateOrders.stream().mapToInt(BarcodeAndCount::getCount).sum());
+        reducedOrder.setCount(duplicateOrders.stream()
+                .map(BarcodeAndCount::getCount).reduce(BigDecimal.ZERO,BigDecimal::add));
+
         return reducedOrder;
     }
 }

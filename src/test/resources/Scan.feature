@@ -57,3 +57,23 @@ Feature: scan code
         ]
       }
     """
+
+  Scenario: scan api with barcode and 1.5
+    When I 'POST' the api '/scan' with
+      """
+      [
+        "22345678-1.5",
+      ]
+      """
+    Then the server response will match
+      """
+      {
+        "data": [
+          "****** SuperMarket receipt ******",
+          "pizza: 1.5(L) x 12.3 --- 18.45",
+          "---------------------------------",
+          "total: 18.45(CNY)",
+          "*********************************"
+        ]
+      }
+    """
