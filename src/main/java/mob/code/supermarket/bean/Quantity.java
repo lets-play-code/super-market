@@ -12,10 +12,6 @@ public class Quantity {
     public static final double DOUBLE_MIN = 0.000001;
     private BigDecimal value;
 
-    public Quantity(double value) {
-        this.value = new BigDecimal(value);
-    }
-
     public Quantity(BigDecimal valueBig) {
         this.value = valueBig;
     }
