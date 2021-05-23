@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -19,13 +22,6 @@ import java.util.Objects;
 @Component
 public class ItemDao {
 
-    @Value("${spring.datasource.url}")
-    private String jdbcUrl;
-    @Value("${spring.datasource.username}")
-    private String dbUser;
-    @Value("${spring.datasource.password}")
-    private String dbPassword;
-
     @Autowired
     private DataSource dataSource;
 
@@ -33,7 +29,7 @@ public class ItemDao {
         return getSampleItems().stream()
                 .filter(item -> Objects.equals(item.getBarcode(), barcode))
                 .findFirst()
-                .get();
+                .orElseThrow(() -> new SupermarketException(String.format("item doesn't exist: %s", barcode)));
     }
 
     public List<Item> getSampleItems() {
@@ -49,6 +45,31 @@ public class ItemDao {
                 items.add(new Item(barcode, name, unit, price, type == 0 ? "individual" : "weight"));
             }
             return items;
+        } catch (SQLException e) {
+            throw new SupermarketException(e);
+        }
+    }
+
+    public void saveSampleData() {
+        try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
+            System.out.println("Inserting records into the table...");
+            String sql = "INSERT INTO item VALUES (12345678, 'pizza', '', 15, 0)";
+            stmt.executeUpdate(sql);
+            sql = "INSERT INTO item VALUES (22345678, 'milk', 'L', 12.3, 1)";
+            stmt.executeUpdate(sql);
+            System.out.println("Inserted records into the table...");
+
+        } catch (SQLException e) {
+            throw new SupermarketException(e);
+        }
+    }
+
+    public void clear() {
+        try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
+            String sql = "delete from item;";
+            stmt.executeUpdate(sql);
+            System.out.println("Deleted records from the table...");
+
         } catch (SQLException e) {
             throw new SupermarketException(e);
         }

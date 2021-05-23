@@ -33,6 +33,7 @@ dependencies {
     runtimeOnly 'org.postgresql:postgresql'
     compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+    runtimeOnly 'org.flywaydb:flyway-core:5.2.4'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.cucumber:cucumber-java:6.10.2'
     testImplementation 'io.cucumber:cucumber-spring:6.10.2'
