@@ -1,8 +1,11 @@
 package mob.code.supermarket.bean;
 
+import lombok.Getter;
+
 import java.text.DecimalFormat;
 
 public class Money {
+    @Getter
     private double value;
 
     public Money(double value) {

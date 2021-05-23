@@ -7,6 +7,7 @@ import java.util.Optional;
 public class ReceiptItem {
     private final String name;
     private final double price;
+    private Money priceObj;
     private final String unit;
     private final String type;
     private final Quantity quantity;
@@ -15,6 +16,7 @@ public class ReceiptItem {
         this.name = name;
         this.quantity = buyItem.getQuantity();
         this.price = price;
+        this.priceObj = new Money(price);
         this.unit = unit;
         this.type = type;
         checkQuantity(type, buyItem);

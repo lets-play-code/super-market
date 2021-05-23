@@ -24,7 +24,7 @@ public class ItemDO {
     private String type;
 
     public Item toEntity() {
-        return new Item(barcode, name, unit, price.doubleValue(), type);
+        return new Item(barcode, name, unit, price, type);
     }
 
     public static ItemDO fromEntity(Item entity) {
