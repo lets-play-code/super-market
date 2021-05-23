@@ -62,7 +62,7 @@ Feature: scan code
     When I 'POST' the api '/scan' with
       """
       [
-        "22345678-1.5",
+        "22345678-1.5"
       ]
       """
     Then the server response will match
@@ -70,7 +70,7 @@ Feature: scan code
       {
         "data": [
           "****** SuperMarket receipt ******",
-          "pizza: 1.5(L) x 12.3 --- 18.45",
+          "milk: 1.5(L) x 12.30 --- 18.45",
           "---------------------------------",
           "total: 18.45(CNY)",
           "*********************************"
