@@ -36,3 +36,24 @@ Feature: scan code
         "error": "item doesn't exist: 88888888"
       }
     """
+  Scenario: scan api with duplicate barcode
+    When I 'POST' the api '/scan' with
+      """
+      [
+        "12345678",
+        "12345678",
+        "12345678"
+      ]
+      """
+    Then the server response will match
+      """
+      {
+        "data": [
+          "****** SuperMarket receipt ******",
+          "pizza: 3 x 15.00 --- 45.00",
+          "---------------------------------",
+          "total: 45.00(CNY)",
+          "*********************************"
+        ]
+      }
+    """

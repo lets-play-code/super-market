@@ -15,3 +15,5 @@ insert into item(barcode, name, unit, price, type) values('12345678', 'pizza', '
 insert into item(barcode, name, unit, price, type) values('22345678', 'milk', 'L', 12.3, 0);
 
 
+
+

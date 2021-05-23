@@ -12,10 +12,12 @@ import lombok.Data;
 public class BarcodeAndCount {
     private  String barcode;
     private  int count;
+    private String inbarcode;
 
-    public BarcodeAndCount(String barcode, int i) {
+    public BarcodeAndCount(String barcode, int count, String inbarcode) {
         this.barcode = barcode;
-        this.count = i;
+        this.count = count;
+        this.inbarcode = inbarcode;
     }
 }
 

@@ -7,6 +7,7 @@ import mob.code.supermarket.dao.ItemRepository;
 import mob.code.supermarket.model.SupermarketException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,24 +29,32 @@ public class ItemService {
         this.itemRepository = itemRepository;
     }
 
-    public Order makeOrder(String inbarcode) {
-        BarcodeAndCount barcodeAndCount = parseBarcode(inbarcode);
+    private Order makeOrder(BarcodeAndCount barcodeAndCount) {
         Optional<Item> items = itemRepository.getByBarcode(barcodeAndCount.getBarcode());
-        Item item = items.orElseThrow(() -> new SupermarketException(format("item doesn't exist: %s", inbarcode)));
+        Item item = items.orElseThrow(() -> new SupermarketException(format("item doesn't exist: %s", barcodeAndCount.getInbarcode())));
         return Order.create(item, barcodeAndCount.getCount());
     }
 
     public BarcodeAndCount parseBarcode(String barcode) {
         String[] split = barcode.split("-");
         if (split.length == 1) {
-            return new BarcodeAndCount(barcode, 1);
+            return new BarcodeAndCount(barcode, 1,barcode);
         } else {
-            return new BarcodeAndCount(split[0], Integer.parseInt(split[1]));
+            return new BarcodeAndCount(split[0], Integer.parseInt(split[1]),barcode);
         }
     }
 
     public List<Order> makeOrders(List<String> barcodes) {
-        return barcodes.stream()
+        final List<BarcodeAndCount> barcodeAndCountList =new ArrayList<>();
+        barcodes.stream()
+                .map(this::parseBarcode)
+                .collect(Collectors.groupingBy(BarcodeAndCount::getBarcode))
+                .forEach((key, value) -> {
+                    BarcodeAndCount barcodeAndCount = value.get(0);
+                    barcodeAndCount.setCount(value.size());
+                    barcodeAndCountList.add(barcodeAndCount);
+                });
+        return barcodeAndCountList.stream()
                 .map(this::makeOrder)
                 .collect(Collectors.toList());
     }

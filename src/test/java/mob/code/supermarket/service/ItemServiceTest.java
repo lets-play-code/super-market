@@ -46,9 +46,9 @@ public class ItemServiceTest {
         String inBarcode = "12345678";
         Item item = new Item("12345", "apple", "cn", 2.2d, "1");
         given(itemRepository.getByBarcode(inBarcode)).willReturn(Optional.of(item));
-        Order order = itemService.makeOrder(inBarcode);
+        List<Order> orders = itemService.makeOrders(Arrays.asList(inBarcode));
         Order expectedOrder = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", 1);
-        assertThat(order, is(expectedOrder));
+        assertThat(orders.get(0), is(expectedOrder));
     }
 
     @Test
@@ -56,15 +56,15 @@ public class ItemServiceTest {
         String barcode = "22345678-3";
         Item item = new Item("22345678", "milk", "L", 15.0d, "1");
         given(itemRepository.getByBarcode("22345678")).willReturn(Optional.of(item));
-        Order order = itemService.makeOrder(barcode);
-        assertThat(order, is(new Order("22345678", "milk", "L", 15.0d, "", 3)));
+        List<Order> orders = itemService.makeOrders(Arrays.asList(barcode));
+        assertThat(orders.get(0), is(new Order("22345678", "milk", "L", 15.0d, "", 3)));
     }
 
     @Test
     public void when_2_barcode_then_2_order() {
         given(itemRepository.getByBarcode(Mockito.anyString()))
                 .willReturn(Optional.of(new Item("22345678", "milk", "L", 15.0d, "1")));
-        List<Order> orders = itemService.makeOrders(Arrays.asList("", ""));
+        List<Order> orders = itemService.makeOrders(Arrays.asList("2", "1"));
         assertThat(2, is(orders.size()));
 
     }
@@ -74,7 +74,16 @@ public class ItemServiceTest {
         expectedException.expect(SupermarketException.class);
         String errorBarcode = "barcodeNotExist";
         expectedException.expectMessage(format("item doesn't exist: %s", errorBarcode));
+        itemService.makeOrders(Arrays.asList(errorBarcode));
+    }
 
-        itemService.makeOrder(errorBarcode);
+    @Test
+    public void when_2_duplicate_barcode_then_return_1_order() {
+        given(itemRepository.getByBarcode(Mockito.anyString()))
+                .willReturn(Optional.of(new Item("123456", "water", "L", 15.0d, "1")));
+        List<Order> orders = itemService.makeOrders(Arrays.asList("123456", "123456"));
+        assertThat(orders.size(), is(1));
+        assertThat(orders.get(0).getBarcode(), is("123456"));
+        assertThat(orders.get(0).getQuantity(), is(2));
     }
 }
