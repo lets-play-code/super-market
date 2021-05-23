@@ -43,12 +43,12 @@ public class BarcodeReaderTest2 {
             "|   _| _||_||_ |_   ||_|\n"+
             "|  |_  _|  | _||_|  ||_|\n"+
             "\n"+
-            " _  _  _     _  _  _  _ \n"+
-            " _| _| _||_||_ |_   ||_|\n"+
-            "|_ |_  _|  | _||_|  ||_|\n"+
-            "3.5";
+            "    _  _     _  _  _  _ \n"+
+            "|   _| _||_||_ |_   ||_|\n"+
+            "|  |_  _|  | _||_|  ||_|\n"+
+            "\n";
         List<String> barcode = BarcodeReader.barcodeFactory().getBarcode(input);
-        assertThat(barcode, is(Arrays.asList("12345678","22345678-3.5")));
+        assertThat(barcode, is(Arrays.asList("12345678","12345678")));
     }
 
 
