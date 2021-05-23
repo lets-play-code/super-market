@@ -20,7 +20,7 @@ public class SupermarketController {
 
     @PostMapping("scan")
     public Response<List<String>> scan(@RequestBody List<String> items) {
-        List<ReceiptItem> receiptItems = new BuyItems(items)
+        List<ReceiptItem> receiptItems = new BuyItems(new BuyItems(items).toNewList(items))
                 .toList()
                 .map(buyItem -> {
                     Item item = itemRepository.findByBarcode(buyItem.getBarcode()).orElseThrow(() -> new ItemNotFoundException(buyItem.getBarcode()));
