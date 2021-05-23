@@ -29,7 +29,7 @@ public class ItemDO {
 
     public static ItemDO fromEntity(Item entity) {
         return ItemDO.builder()
-                .price(BigDecimal.valueOf(entity.getPrice().getValueBig().doubleValue()))
+                .price(entity.getPriceValue())
                 .name(entity.getName())
                 .type(entity.getType())
                 .unit(entity.getUnit())

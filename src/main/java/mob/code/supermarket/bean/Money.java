@@ -7,14 +7,10 @@ import java.text.DecimalFormat;
 
 public class Money {
     @Getter
-    private BigDecimal valueBig;
-
-    public Money(double value) {
-        this.valueBig = new BigDecimal(value);
-    }
+    private BigDecimal value;
 
     public Money(String str) {
-        this.valueBig = new BigDecimal(str);
+        this.value = new BigDecimal(str);
     }
 
     public Money toMoney() {
@@ -22,11 +18,11 @@ public class Money {
     }
 
     public Money(BigDecimal bigDecimal) {
-        this.valueBig = bigDecimal;
+        this.value = bigDecimal;
     }
 
     public String format() {
-        return new DecimalFormat("0.00").format(Math.floor(valueBig.doubleValue() * 100) / 100);
+        return new DecimalFormat("0.00").format(Math.floor(value.doubleValue() * 100) / 100);
     }
 
     public double toActual() {
@@ -34,10 +30,10 @@ public class Money {
     }
 
     public Money times(Quantity quantity) {
-        return new Money(this.valueBig.multiply(quantity.getValue()));
+        return new Money(this.value.multiply(quantity.getValue()));
     }
 
     public Money add(Money another) {
-        return new Money(this.valueBig.add(another.valueBig));
+        return new Money(this.value.add(another.value));
     }
 }

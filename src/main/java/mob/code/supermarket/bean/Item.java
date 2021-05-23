@@ -3,6 +3,7 @@ package mob.code.supermarket.bean;
 import lombok.Data;
 
 import java.math.BigDecimal;
+
 @Data
 public class Item {
     private String barcode;
@@ -20,4 +21,7 @@ public class Item {
     }
 
 
+    public BigDecimal getPriceValue() {
+        return this.price.getValue();
+    }
 }

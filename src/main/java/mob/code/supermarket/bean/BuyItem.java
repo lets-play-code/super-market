@@ -28,22 +28,12 @@ public class BuyItem {
                 .collect(Collectors.toList());
     }
 
-
-    public BuyItem(String barcode, Quantity quantity, String original) {
-        this.barcode = barcode;
-        this.quantity = quantity;
-        this.original = Collections.singletonList(original);
-    }
-
     private Stream<String> originalStream() {
         return original.stream();
     }
 
-
     public BuyItem(String barcode, String count, String original) {
-        this.barcode = barcode;
-        this.quantity = new Quantity(count);
-        this.original = Collections.singletonList(original);
+        this(barcode, count, Collections.singletonList(original));
     }
 
     public BuyItem(String barcode, String quantity, List<String> original) {
@@ -55,9 +45,9 @@ public class BuyItem {
     public static BuyItem from(String str) {
         String[] split = str.split("-");
         if (split.length == 2) {
-            return new BuyItem(split[0], new Quantity(split[1]), str);
+            return new BuyItem(split[0], split[1], str);
         }
-        return new BuyItem(str, new Quantity(1), str);
+        return new BuyItem(str, "1", str);
     }
 
     public boolean hasQuantity() {
