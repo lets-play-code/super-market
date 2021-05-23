@@ -55,4 +55,5 @@ public class RestfulSteps {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         JSONAssert.assertEquals(expectedResponse, response.getBody(), false);
     }
+
 }

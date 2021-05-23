@@ -12,6 +12,9 @@ public class Item {
     private double price;
     private String type;
 
+    public Item() {
+    }
+
     public Item(String barcode, String name, String unit, double price, String type) {
         this.barcode = barcode;
         this.name = name;
