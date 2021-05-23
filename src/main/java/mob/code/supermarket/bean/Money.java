@@ -34,7 +34,7 @@ public class Money {
     }
 
     public Money times(Quantity quantity) {
-        return new Money(this.valueBig.multiply(new BigDecimal(quantity.getValue())));
+        return new Money(this.valueBig.multiply(quantity.getValue()));
     }
 
     public Money add(Money another) {

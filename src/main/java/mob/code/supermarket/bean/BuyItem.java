@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ public class BuyItem {
 
     public BuyItem(String key, List<BuyItem> values) {
         this.barcode = key;
-        this.quantity = values.stream().map(BuyItem::getQuantity).reduce(new Quantity(0), Quantity::add);
+        this.quantity = values.stream().map(BuyItem::getQuantity).reduce(new Quantity(new BigDecimal(0)), Quantity::add);
         this.original = values.stream()
                 .flatMap(BuyItem::originalStream)
                 .collect(Collectors.toList());
@@ -39,15 +40,15 @@ public class BuyItem {
     }
 
 
-    public BuyItem(String barcode, double count, String original) {
+    public BuyItem(String barcode, String count, String original) {
         this.barcode = barcode;
         this.quantity = new Quantity(count);
         this.original = Collections.singletonList(original);
     }
 
-    public BuyItem(String barcode, double count, List<String> original) {
+    public BuyItem(String barcode, String quantity, List<String> original) {
         this.barcode = barcode;
-        this.quantity = new Quantity(count);
+        this.quantity = new Quantity(quantity);
         this.original = original;
     }
 
@@ -56,7 +57,7 @@ public class BuyItem {
         if (split.length == 2) {
             return new BuyItem(split[0], new Quantity(split[1]), str);
         }
-        return new BuyItem(str, 1, str);
+        return new BuyItem(str, new Quantity(1), str);
     }
 
     public boolean hasQuantity() {

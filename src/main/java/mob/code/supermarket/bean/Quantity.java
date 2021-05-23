@@ -10,26 +10,30 @@ import java.math.RoundingMode;
 @EqualsAndHashCode
 public class Quantity {
     public static final double DOUBLE_MIN = 0.000001;
-    private double value;
+    private BigDecimal value;
 
     public Quantity(double value) {
-        this.value = value;
+        this.value = new BigDecimal(value);
+    }
+
+    public Quantity(BigDecimal valueBig) {
+        this.value = valueBig;
     }
 
     public Quantity add(Quantity another) {
-        return new Quantity(this.value + another.value);
+        return new Quantity(this.value.add(another.getValue()));
     }
 
     public Quantity(String str) {
-        this.value = Double.parseDouble(str);
+        this.value = new BigDecimal(str);
     }
 
     public String toString() {
-        return BigDecimal.valueOf(value).setScale(1, RoundingMode.HALF_UP).toString();
+        return value.setScale(1, RoundingMode.HALF_UP).toString();
     }
 
     public void assertIsInteger(String barcode) {
-        ensureIsInteger(this.value, barcode);
+        ensureIsInteger(this.value.doubleValue(), barcode);
     }
 
     private void ensureIsInteger(double value, String barcode) {
@@ -44,16 +48,16 @@ public class Quantity {
     }
 
     public void assertLegal(String barcode) {
-        this.ensureIsInteger(this.value * 10, barcode);
+        this.ensureIsInteger(this.value.doubleValue() * 10, barcode);
     }
 
     public void ensureNotZero(String barcode) {
-        if (isZero(value)) {
+        if (isZero(value.doubleValue())) {
             throw new WrongQuantityException(barcode);
         }
     }
 
     public int toInt() {
-        return (int)value;
+        return (int) value.doubleValue();
     }
 }
