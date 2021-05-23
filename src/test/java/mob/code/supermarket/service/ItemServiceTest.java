@@ -107,7 +107,21 @@ public class ItemServiceTest {
         assertThat(orders.get(0).getQuantity(), is(BigDecimal.valueOf(3)));
     }
 
+    @Test
+    public void should_throw_Supermarket_Exception_when_the_barcode_quantity_is_precision_more_then_1() {
+        expectedException.expect(SupermarketException.class);
+        String errorBarcode = "123-1.55";
+        expectedException.expectMessage(format("wrong quantity of %s", "123"));
+        itemService.makeOrders(Arrays.asList(errorBarcode));
+    }
 
+    @Test
+    public void should_throw_Supermarket_Exception_when_the_barcode_quantity_is_0() {
+        expectedException.expect(SupermarketException.class);
+        String errorBarcode = "123-0";
+        expectedException.expectMessage(format("wrong quantity of %s", "123"));
+        itemService.makeOrders(Arrays.asList(errorBarcode));
+    }
 
 
 

@@ -9,7 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,12 +37,23 @@ public class ItemService {
         return Order.create(item, barcodeAndCount.getCount());
     }
 
-    public BarcodeAndCount parseBarcode(String barcode) {
-        String[] split = barcode.split("-");
+    public BarcodeAndCount parseBarcode(String inBarcode) {
+        String[] split = inBarcode.split("-");
         if (split.length == 1) {
-            return new BarcodeAndCount(barcode, 1,barcode);
-        } else {
-            return new BarcodeAndCount(split[0], new BigDecimal(split[1]),barcode);
+            return new BarcodeAndCount(inBarcode, 1,inBarcode);
+        }
+        String barcode = split[0];
+        String quantity = split[1];
+        validateQuantity(quantity, barcode);
+        return new BarcodeAndCount(barcode, new BigDecimal(quantity),inBarcode);
+    }
+
+    private void validateQuantity(String quantity, String barcode) {
+        if(new BigDecimal(quantity).setScale(1, RoundingMode.FLOOR).compareTo(new BigDecimal(quantity)) != 0) {
+            throw new SupermarketException(format("wrong quantity of %s", barcode));
+        }
+        if(new BigDecimal(quantity).compareTo(BigDecimal.ZERO) == 0) {
+            throw new SupermarketException(format("wrong quantity of %s", barcode));
         }
     }
 
