@@ -199,6 +199,29 @@ Feature: Scan products
       }
       """
 
+#  Scenario: Scan product with original QRCode
+#    When I 'POST' the api '/scan' with
+#      """
+#      [
+#        "    _  _     _  _  _  _ ",
+#        "|   _| _||_||_ |_   ||_|",
+#        "|  |_  _|  | _||_|  ||_|",
+#        "",
+#      ]
+#      """
+#    Then the server response will match
+#      """
+#      {
+#        "data": [
+#          "****** SuperMarket receipt ******",
+#          "coffee: 1.5(L) x 18.77 --- 28.15",
+#          "---------------------------------",
+#          "total: 28.15(CNY)",
+#          "*********************************"
+#        ]
+#      }
+#      """
+
 #  Scenario: Scan invalid QRCode
 #    When I 'POST' the api '/scan' with
 #      """

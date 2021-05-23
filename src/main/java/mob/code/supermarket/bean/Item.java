@@ -54,4 +54,8 @@ public class Item {
     public void setType(String type) {
         this.type = type;
     }
+
+    public boolean isIndividual() {
+        return "individual".contentEquals(this.type);
+    }
 }

@@ -61,4 +61,8 @@ public class Barcode {
                     return new Barcode(x.getKey(), sum.floatValue(), isNumberUndefined);
                 }).collect(Collectors.toList());
     }
+
+    public boolean isNumberInteger() {
+        return (number - number.intValue()) == 0;
+    }
 }

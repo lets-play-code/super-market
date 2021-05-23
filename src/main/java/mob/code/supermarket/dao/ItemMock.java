@@ -11,8 +11,4 @@ public class ItemMock implements IItemDao {
         return null;
     }
 
-    @Override
-    public List<Item> getItems(List<String> codes) {
-        return null;
-    }
 }

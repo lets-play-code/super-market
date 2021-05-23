@@ -1,6 +1,5 @@
 package mob.code.supermarket.entity;
 
-import mob.code.supermarket.model.SupermarketException;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -25,12 +24,14 @@ public class ReceiptItemTest {
         assertThat(actual, is(expected));
     }
 
-    @Test(expected = SupermarketException.class)
+    @Test
     public void 数量是否为整数() {
         ReceiptItem pizza = new ReceiptItem("pizza", 1.0f, new BigDecimal("15.00"), "", "individual");
         boolean actual = pizza.isCountInteger();
         assertThat(actual, is(true));
 
-        new ReceiptItem("pizza", 1.2f, new BigDecimal("15.00"), "", "individual");
+        pizza = new ReceiptItem("pizza", 1.2f, new BigDecimal("15.00"), "", "individual");
+        actual = pizza.isCountInteger();
+        assertThat(actual, is(false));
     }
 }

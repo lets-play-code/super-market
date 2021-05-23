@@ -60,7 +60,14 @@ public class SupermarketController {
         if (Objects.isNull(item)) {
             throw new SupermarketException("item doesn't exist: " + x.getCode());
         }
-        return new ReceiptItem(item, x);
+        if (!item.isIndividual() && x.isNumberUndefined()) {
+            throw new SupermarketException("wrong quantity of " + x.getCode());
+        }
+        // 不能有小数，必须是整数
+        if (item.isIndividual() && !x.isNumberInteger()) {
+            throw new SupermarketException("wrong quantity of " + x.getCode());
+        }
+        return new ReceiptItem(item, x.getNumber());
     }
 
     @PostMapping("tryBarCode")

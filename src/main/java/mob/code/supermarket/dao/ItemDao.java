@@ -43,11 +43,6 @@ public class ItemDao implements IItemDao {
         }
     }
 
-    @Override
-    public List<Item> getItems(List<String> codes) {
-        return null;
-    }
-
     public Item getItem(String code) {
         try (Connection conn = DriverManager.getConnection(jdbcUrl,
                 dbUser, dbPassword); Statement stmt = conn.createStatement()) {
