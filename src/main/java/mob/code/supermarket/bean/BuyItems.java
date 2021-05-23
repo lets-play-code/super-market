@@ -11,7 +11,7 @@ public class BuyItems {
         this.items = items;
     }
 
-    public Stream<BuyItem> toList() {
+    public Stream<BuyItem> toItemsStream() {
         return items.stream()
                 .map(BuyItem::from)
                 .collect(Collectors.groupingBy(BuyItem::getBarcode))

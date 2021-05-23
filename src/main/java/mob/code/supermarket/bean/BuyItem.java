@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class BuyItem {
     private final String barcode;
     private final List<String> original;
-    private Quantity quantity;
+    private final Quantity quantity;
 
     public BuyItem(String key, List<BuyItem> values) {
         this.barcode = key;

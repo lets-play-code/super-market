@@ -21,10 +21,12 @@ public class SupermarketController {
     @PostMapping("scan")
     public Response<List<String>> scan(@RequestBody List<String> items) {
         List<ReceiptItem> receiptItems = new BuyItems(items)
-                .toList()
+                .toItemsStream()
                 .map(buyItem -> {
                     Item item = itemRepository.findByBarcode(buyItem.getBarcode()).orElseThrow(() -> new ItemNotFoundException(buyItem.getBarcode()));
-                    return new ReceiptItem(item.getName(), item.getPrice(), item.getUnit(), item.getType(),buyItem);
+                    ReceiptItem receiptItem = new ReceiptItem(item.getName(), item.getPrice(), item.getUnit(), item.getType(), buyItem);
+                    receiptItem.checkQuantity();
+                    return receiptItem;
                 }).collect(Collectors.toList());
         Receipt receipt = Receipt.of(receiptItems);
         return Response.of(receipt.output());
