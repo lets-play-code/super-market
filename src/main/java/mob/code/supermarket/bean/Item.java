@@ -1,6 +1,11 @@
 package mob.code.supermarket.bean;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Item {
+    @Id
     private String barcode;
     private String name;
     private String unit;
@@ -13,6 +18,10 @@ public class Item {
         this.unit = unit;
         this.price = price;
         this.type = type;
+    }
+
+    public Item() {
+
     }
 
     public String getBarcode() {

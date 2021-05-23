@@ -1,7 +1,7 @@
 package mob.code.supermarket;
 
 import mob.code.supermarket.bean.Item;
-import mob.code.supermarket.dao.ItemDao;
+import mob.code.supermarket.repository.ItemRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -29,7 +31,7 @@ public class SupermarketControllerTest {
     private WebApplicationContext webApplicationContext;
 
     @Autowired
-    private ItemDao itemDao;
+    private ItemRepository itemRepository;
 
     @Before
     public void setUp() {
@@ -38,13 +40,13 @@ public class SupermarketControllerTest {
     }
 
     private void initTestData() {
-        itemDao.save(new Item("12345678", "pizza", "", 15, "0"));
-        itemDao.save(new Item("22345678", "milk", "L", 12.3, "1"));
+        itemRepository.save(new Item("12345678", "pizza", "", 15, "0"));
+        itemRepository.save(new Item("22345678", "milk", "L", 12.3, "1"));
     }
 
     @After
     public void tearDown() {
-        itemDao.clear();
+        itemRepository.deleteAll();
     }
 
     @Test
@@ -55,6 +57,8 @@ public class SupermarketControllerTest {
 
     @Test
     public void test_scan() throws Exception {
+        List<Item> all = itemRepository.findAll();
+        assertThat(all.size()).isEqualTo(2);
         String requestJson = "[\n" +
                 "\"12345678\",\n" +
                 "\"22345678-3\"\n" +

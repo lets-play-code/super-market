@@ -1,16 +1,14 @@
 package mob.code.supermarket.controller;
 
 import mob.code.supermarket.bean.Item;
-import mob.code.supermarket.dao.ItemDao;
 import mob.code.supermarket.dto.Response;
 import mob.code.supermarket.legacy.BarcodeReader;
 import mob.code.supermarket.model.Receipt;
 import mob.code.supermarket.model.ReceiptItem;
 import mob.code.supermarket.model.SupermarketException;
-import org.springframework.beans.factory.annotation.Autowired;
+import mob.code.supermarket.repository.ItemRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +16,11 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/")
 public class SupermarketController {
-    @Autowired
-    ItemDao itemDao;
+    private final ItemRepository itemRepository;
+
+    public SupermarketController(ItemRepository itemRepository) {
+        this.itemRepository = itemRepository;
+    }
 
     @GetMapping("ping")
     public Response<String> ping() {
@@ -33,7 +34,7 @@ public class SupermarketController {
 
     @GetMapping("item")
     public Response<List<Item>> getItems() {
-        return Response.of(itemDao.getSampleItems());
+        return Response.of(itemRepository.findAll());
     }
 
     @PostMapping("tryBarCode")
@@ -60,7 +61,9 @@ public class SupermarketController {
 
     private ReceiptItem getReceiptItem(String scan) {
         BarcodeParser barcodeParser = new BarcodeParser(scan);
-        Item item = itemDao.findByBarcode(barcodeParser.getBarCode());
+        String barcode = barcodeParser.getBarCode();
+        Item item = itemRepository.findByBarcode(barcode)
+                .orElseThrow(() -> new SupermarketException(String.format("item doesn't exist: %s", barcode)));
         return new ReceiptItem(item, barcodeParser.getQuantity());
     }
 }
