@@ -11,7 +11,7 @@ public class ReceiptItem {
     private final String unit;
     private final String type;
 
-    public ReceiptItem(String name, double count, double price, String unit, String type, BuyItem buyItem) {
+    public ReceiptItem(String name, double price, String unit, String type, BuyItem buyItem) {
         this.name = name;
         this.quantity = buyItem.getQuantity();
         this.price = price;
@@ -23,27 +23,37 @@ public class ReceiptItem {
     private void checkQuantity(String type, BuyItem buyItem) {
         Quantity quantity = new Quantity(this.quantity);
         quantity.ensureNotZero(buyItem.getBarcode());
-        if (type.equals("0")) {
+        if (isPackaged()) {
             quantity.assertIsInteger(buyItem.getBarcode());
+            return;
         }
-        if (type.equals("1")) {
-            buyItem.ensureHasQuantity();
-            quantity.assertLegal(buyItem.getBarcode());
+        if (!buyItem.hasQuantity()) {
+            throw new WrongQuantityException(buyItem.getBarcode());
         }
+        quantity.assertLegal(buyItem.getBarcode());
+
     }
 
     public String format() {
+        return name + ": " + getQuantity() + getUnitPart() + " x " + new Money(price).format() + " --- " + new Money(total()).format();
+    }
+
+    private String getUnitPart() {
         String unitPart = Optional.ofNullable(this.unit)
                 .filter(str -> !StringUtils.isEmpty(str))
                 .map(u -> "(" + u + ")").orElse("");
-        return name + ": " + getQuantity() + unitPart + " x " + new Money(price).format() + " --- " + new Money(total()).format();
+        return unitPart;
     }
 
     private String getQuantity() {
-        if (this.type.equals("0")) {
+        if (isPackaged()) {
             return String.valueOf((int) this.quantity);
         }
         return new Quantity(this.quantity).toString();
+    }
+
+    private boolean isPackaged() {
+        return this.type.equals("0");
     }
 
     public double total() {

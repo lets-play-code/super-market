@@ -44,9 +44,8 @@ public class BuyItem {
         return new BuyItem(str, 1, str);
     }
 
-    public void ensureHasQuantity() {
-        if (!this.originalStream().allMatch(record -> record.contains("-"))) {
-            throw new WrongQuantityException(barcode);
-        }
+    public boolean hasQuantity() {
+        return this.originalStream().allMatch(record -> record.contains("-"));
     }
+
 }

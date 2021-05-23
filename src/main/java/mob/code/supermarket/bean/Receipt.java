@@ -3,12 +3,11 @@ package mob.code.supermarket.bean;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Receipt {
-    private String header = "****** SuperMarket receipt ******";
-    private String footer = "*********************************";
-    private String split = "---------------------------------";
+    private final static String header = "****** SuperMarket receipt ******";
+    private final static String footer = "*********************************";
+    private final static String split = "---------------------------------";
     private List<ReceiptItem> items;
 
     public Receipt(List<ReceiptItem> items) {
