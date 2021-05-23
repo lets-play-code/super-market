@@ -1,13 +1,11 @@
 package mob.code.supermarket.bean;
 
 
-import java.util.*;
-
-public interface ItemRepository {
+public interface ProductRepository {
 
     public void add(Product receiptItem);
 
-    public List<ReceiptItem> findBy(String[] barcodes);
+    public Product findByBarcode(String barcode);
 
-    public ReceiptItem barcodeToReceiptItem(String barcode);
+    void clear();
 }
