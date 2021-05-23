@@ -1,10 +1,14 @@
 package mob.code.supermarket.bean;
 
+import antlr.StringUtils;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
 public class Item {
+    public static final String ITEM_TYPE_PACKAGED = "0";
+
     @Id
     private String barcode;
     private String name;
@@ -61,5 +65,9 @@ public class Item {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isPackage() {
+        return type.equals(ITEM_TYPE_PACKAGED);
     }
 }

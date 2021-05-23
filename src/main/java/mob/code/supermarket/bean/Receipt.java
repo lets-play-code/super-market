@@ -1,5 +1,6 @@
 package mob.code.supermarket.bean;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,8 +35,8 @@ public class Receipt {
 
     private String printTotalAmount() {
         return format(
-                "total: %.2f(CNY)",
-                this.orders.stream().mapToDouble(Order::getAmount).sum()
+                "total: %s(CNY)",
+                this.orders.stream().map(Order::getAmount).reduce(BigDecimal.ZERO, BigDecimal::add).toPlainString()
         );
     }
 

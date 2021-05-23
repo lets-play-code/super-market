@@ -14,6 +14,6 @@ public class OrderTest {
                 new Item("123", "mild", "", 12.23, "1"),
                 BigDecimal.valueOf(3.3)
         );
-        assertThat(order.getAmount()).isEqualTo(40.35);
+        assertThat(order.getAmount()).isEqualTo(BigDecimal.valueOf(40.35));
     }
 }

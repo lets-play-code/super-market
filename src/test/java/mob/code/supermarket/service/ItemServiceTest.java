@@ -1,5 +1,6 @@
 package mob.code.supermarket.service;
 
+import io.cucumber.java.bs.I;
 import mob.code.supermarket.bean.Item;
 import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.dao.ItemRepository;
@@ -48,7 +49,7 @@ public class ItemServiceTest {
         Item item = new Item("12345", "apple", "cn", 2.2d, "0");
         given(itemRepository.getByBarcode(inBarcode)).willReturn(Optional.of(item));
         List<Order> orders = itemService.makeOrders(Arrays.asList(inBarcode));
-        Order expectedOrder = new Order(item.getBarcode(), item.getName(), item.getUnit(), item.getPrice(), "", BigDecimal.valueOf(1));
+        Order expectedOrder = Order.create(item, BigDecimal.valueOf(1));
         assertThat(orders.get(0), is(expectedOrder));
     }
 
@@ -58,7 +59,8 @@ public class ItemServiceTest {
         Item item = new Item("22345678", "milk", "L", 15.0d, "1");
         given(itemRepository.getByBarcode("22345678")).willReturn(Optional.of(item));
         List<Order> orders = itemService.makeOrders(Arrays.asList(barcode));
-        assertThat(orders.get(0), is(new Order("22345678", "milk", "L", 15.0d, "", BigDecimal.valueOf(3))));
+        Order expected = Order.create(new Item("22345678", "milk", "L", 15.0d, "1"), BigDecimal.valueOf(3));
+        assertThat(orders.get(0), is(expected));
     }
 
     @Test
@@ -97,6 +99,7 @@ public class ItemServiceTest {
         assertThat(orders.get(0).getBarcode(), is("123456"));
         assertThat(orders.get(0).getQuantity(), is(BigDecimal.valueOf(2)));
     }
+
     @Test
     public void when_2_duplicate_barcodeAndCount_then_return_1_order() {
         given(itemRepository.getByBarcode(Mockito.anyString()))
@@ -122,6 +125,7 @@ public class ItemServiceTest {
         expectedException.expectMessage(format("wrong quantity of %s", "123"));
         itemService.makeOrders(Arrays.asList(errorBarcode));
     }
+
     @Test
     public void should_throw_Supermarket_Exception_when_the_barcode_quantity_is_decimal_and_type_is_0() {
         given(itemRepository.getByBarcode(Mockito.anyString()))
@@ -131,6 +135,7 @@ public class ItemServiceTest {
         expectedException.expectMessage(format("wrong quantity of %s", "1234567"));
         itemService.makeOrders(Arrays.asList(errorBarcode));
     }
+
     @Test
     public void should_throw_Supermarket_Exception_when_the_barcode_quantity_is_not_exist_and_type_is_1() {
         given(itemRepository.getByBarcode(Mockito.anyString()))
@@ -140,8 +145,6 @@ public class ItemServiceTest {
         expectedException.expectMessage(format("wrong quantity of %s", "01234567"));
         itemService.makeOrders(Arrays.asList(errorBarcode));
     }
-
-
 
 
 }

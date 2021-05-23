@@ -15,7 +15,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 
 /**
@@ -36,13 +35,9 @@ public class ItemService {
     private Order makeOrder(BarcodeAndCount barcodeAndCount) {
         Optional<Item> items = itemRepository.getByBarcode(barcodeAndCount.getBarcode());
         Item item = items.orElseThrow(() -> new SupermarketException(format("item doesn't exist: %s", barcodeAndCount.getInbarcode())));
-        if (item.getType().equals("0") && barcodeAndCount.getCount().remainder(ONE).compareTo(ZERO) != 0) {
-            throw new SupermarketException(format("wrong quantity of %s", item.getBarcode()));
-        }
-        if (item.getType().equals("1") && !barcodeAndCount.getInbarcode().contains("-")) {
-            throw new SupermarketException(format("wrong quantity of %s", item.getBarcode()));
-        }
-        return Order.create(item, barcodeAndCount.getCount());
+        Order order = Order.create(item, barcodeAndCount);
+        order.validateOrderQuantity(barcodeAndCount.getInbarcode());
+        return order;
     }
 
     public BarcodeAndCount parseBarcode(String inBarcode) {
