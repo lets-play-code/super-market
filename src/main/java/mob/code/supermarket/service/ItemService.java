@@ -5,6 +5,7 @@ import mob.code.supermarket.bean.Order;
 import mob.code.supermarket.dao.BarcodeAndCount;
 import mob.code.supermarket.dao.ItemRepository;
 import mob.code.supermarket.model.SupermarketException;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -45,17 +46,24 @@ public class ItemService {
     }
 
     public List<Order> makeOrders(List<String> barcodes) {
-        final List<BarcodeAndCount> barcodeAndCountList =new ArrayList<>();
-        barcodes.stream()
-                .map(this::parseBarcode)
-                .collect(Collectors.groupingBy(BarcodeAndCount::getBarcode))
-                .forEach((key, value) -> {
-                    BarcodeAndCount barcodeAndCount = value.get(0);
-                    barcodeAndCount.setCount(value.size());
-                    barcodeAndCountList.add(barcodeAndCount);
-                });
-        return barcodeAndCountList.stream()
+        return parseBarcodes(barcodes).stream()
                 .map(this::makeOrder)
                 .collect(Collectors.toList());
+    }
+
+    private List<BarcodeAndCount> parseBarcodes(List<String> barcodes) {
+        return barcodes.stream()
+                .map(this::parseBarcode)
+                .collect(Collectors.groupingBy(BarcodeAndCount::getBarcode))
+                .values().stream()
+                .map(this::reduceDuplicateOrders)
+                .collect(Collectors.toList());
+    }
+
+    private BarcodeAndCount reduceDuplicateOrders(List<BarcodeAndCount> duplicateOrders) {
+        BarcodeAndCount reducedOrder = new BarcodeAndCount();
+        BeanUtils.copyProperties(duplicateOrders.get(0), reducedOrder);
+        reducedOrder.setCount(duplicateOrders.stream().mapToInt(BarcodeAndCount::getCount).sum());
+        return reducedOrder;
     }
 }

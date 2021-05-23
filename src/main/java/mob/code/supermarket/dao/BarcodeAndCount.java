@@ -1,6 +1,7 @@
 package mob.code.supermarket.dao;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * description: BarcodeAndCount <br>
@@ -9,6 +10,7 @@ import lombok.Data;
  * version: 1.0 <br>
  */
 @Data
+@NoArgsConstructor
 public class BarcodeAndCount {
     private  String barcode;
     private  int count;
