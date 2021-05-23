@@ -3,6 +3,7 @@ package mob.code.supermarket.bean;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
+import java.util.function.Function;
 
 public class ReceiptItem {
     private final String name;
@@ -11,6 +12,17 @@ public class ReceiptItem {
     private final String unit;
     private final String type;
     private final Quantity quantity;
+
+    public ReceiptItem(BuyItem buyItem, Function<BuyItem, Item> itemFeather) {
+        this.buyItem = buyItem;
+        this.quantity = buyItem.getQuantity();
+        Item item = itemFeather.apply(buyItem);
+        this.name = item.getName();
+        this.unit = item.getUnit();
+        this.price = item.getPrice();
+        this.type = item.getType();
+        this.checkQuantity();
+    }
 
     public ReceiptItem(String name, Money price, String unit, String type, BuyItem buyItem) {
         this.name = name;
