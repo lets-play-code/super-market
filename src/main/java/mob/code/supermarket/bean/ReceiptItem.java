@@ -11,10 +11,6 @@ public class ReceiptItem {
     private final String type;
     private final Quantity quantity;
 
-    public ReceiptItem(String name, double price, String unit, String type, BuyItem buyItem) {
-        this(name, new Money(price), unit, type, buyItem);
-    }
-
     public ReceiptItem(String name, Money price, String unit, String type, BuyItem buyItem) {
         this.name = name;
         this.quantity = buyItem.getQuantity();

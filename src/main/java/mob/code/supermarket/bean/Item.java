@@ -8,16 +8,14 @@ public class Item {
     private String barcode;
     private String name;
     private String unit;
-    private double price;
-    private Money priceObj;
+    private Money price;
     private String type;
 
     public Item(String barcode, String name, String unit, BigDecimal price, String type) {
         this.barcode = barcode;
         this.name = name;
         this.unit = unit;
-        this.price = price.doubleValue();
-        this.priceObj = new Money(price.doubleValue());
+        this.price = new Money(price);
         this.type = type;
     }
 

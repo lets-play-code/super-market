@@ -1,5 +1,6 @@
 package mob.code.supermarket.bean;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,12 +37,13 @@ public class Receipt {
     }
 
     private String getTotalString() {
-        return "total: " + new Money(getTotalPrice()).format() + "(CNY)";
+        return "total: " + getTotalPriceMoney().format() + "(CNY)";
     }
 
-    private double getTotalPrice() {
+    private Money getTotalPriceMoney() {
         return items.stream()
-                .mapToDouble(ReceiptItem::total)
-                .sum();
+                .map(ReceiptItem::totalMoney)
+                .map(Money::toMoney)
+                .reduce(new Money(new BigDecimal(0)), Money::add);
     }
 }
