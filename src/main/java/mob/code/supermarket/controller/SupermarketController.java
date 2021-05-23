@@ -41,4 +41,8 @@ public class SupermarketController {
     public Response wrongQuantity(WrongQuantityException e) {
         return Response.error(e.getMessage());
     }
+    @ExceptionHandler(BarCodeException.class)
+    public Response barcodeException(BarCodeException e) {
+        return Response.error(e.getMessage());
+    }
 }
