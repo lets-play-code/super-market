@@ -1,14 +1,27 @@
 package mob.code.supermarket.bean;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Getter
+@EqualsAndHashCode
 public class Quantity {
     public static final double DOUBLE_MIN = 0.000001;
     private double value;
 
     public Quantity(double value) {
         this.value = value;
+    }
+
+    public Quantity add(Quantity another) {
+        return new Quantity(this.value + another.value);
+    }
+
+    public Quantity(String str) {
+        this.value = Double.parseDouble(str);
     }
 
     public String toString() {
@@ -38,5 +51,9 @@ public class Quantity {
         if (isZero(value)) {
             throw new WrongQuantityException(barcode);
         }
+    }
+
+    public int toInt() {
+        return (int)value;
     }
 }

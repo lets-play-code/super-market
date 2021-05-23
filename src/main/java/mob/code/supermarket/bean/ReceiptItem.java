@@ -6,10 +6,10 @@ import java.util.Optional;
 
 public class ReceiptItem {
     private final String name;
-    private final double quantity;
     private final double price;
     private final String unit;
     private final String type;
+    private final Quantity quantity;
 
     public ReceiptItem(String name, double price, String unit, String type, BuyItem buyItem) {
         this.name = name;
@@ -21,7 +21,7 @@ public class ReceiptItem {
     }
 
     private void checkQuantity(String type, BuyItem buyItem) {
-        Quantity quantity = new Quantity(this.quantity);
+        Quantity quantity = this.quantity;
         quantity.ensureNotZero(buyItem.getBarcode());
         if (isPackaged()) {
             quantity.assertIsInteger(buyItem.getBarcode());
@@ -47,9 +47,9 @@ public class ReceiptItem {
 
     private String getQuantity() {
         if (isPackaged()) {
-            return String.valueOf((int) this.quantity);
+            return String.valueOf(this.quantity.toInt());
         }
-        return new Quantity(this.quantity).toString();
+        return this.quantity.toString();
     }
 
     private boolean isPackaged() {
@@ -57,6 +57,6 @@ public class ReceiptItem {
     }
 
     public double total() {
-        return new Money(this.quantity * this.price).toActual();
+        return new Money(this.quantity.getValue() * this.price).toActual();
     }
 }
