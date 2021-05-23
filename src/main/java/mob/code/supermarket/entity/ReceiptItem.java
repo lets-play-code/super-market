@@ -6,6 +6,7 @@ import mob.code.supermarket.model.SupermarketException;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Data
 public class ReceiptItem {
@@ -53,7 +54,9 @@ public class ReceiptItem {
     }
 
     public BigDecimal totalPrice() {
-        return BigDecimal.valueOf(item.getPrice())
-                .multiply(BigDecimal.valueOf(barcode.getNumber()));
+        BigDecimal price = BigDecimal.valueOf(item.getPrice());
+        BigDecimal count = BigDecimal.valueOf(barcode.getNumber());
+        BigDecimal multiply = price.multiply(count);
+        return multiply.setScale(2, RoundingMode.DOWN);
     }
 }
