@@ -11,7 +11,6 @@ import mob.code.supermarket.model.SupermarketException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -61,11 +60,7 @@ public class SupermarketController {
         if (Objects.isNull(item)) {
             throw new SupermarketException("item doesn't exist: " + x.getCode());
         }
-        return new ReceiptItem(item.getName(),
-                x.getNumber(),
-                BigDecimal.valueOf(item.getPrice()),
-                item.getUnit(),
-                item.getType());
+        return new ReceiptItem(item, x);
     }
 
     @PostMapping("tryBarCode")

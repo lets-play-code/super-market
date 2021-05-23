@@ -79,6 +79,21 @@ Feature: Scan products
       }
       """
 
+  Scenario: Scan weight product need count
+    When I 'POST' the api '/scan' with
+      """
+      [
+        "22345678"
+      ]
+      """
+    Then the server response will match
+      """
+      {
+        "data": null,
+        "error": "wrong quantity of 22345678"
+      }
+      """
+
   Scenario: Scan product has float
     When I 'POST' the api '/scan' with
       """
@@ -113,3 +128,20 @@ Feature: Scan products
         "error": "wrong quantity of 22345678"
       }
       """
+
+#  Scenario: Scan invalid QRCode
+#    When I 'POST' the api '/scan' with
+#      """
+#      [
+#        "    _  _     _  _  _  _ ",
+#        "|   _| _||_||_  _   ||_|",
+#        ""
+#      ]
+#      """
+#    Then the server response will match
+#      """
+#      {
+#        "data": null,
+#        "error": "can not recognize barcode:\n    _  _     _  _  _  _ \n|   _| _||_||_ |_   ||_|"
+#      }
+#      """

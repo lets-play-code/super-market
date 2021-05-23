@@ -1,44 +1,59 @@
 package mob.code.supermarket.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import mob.code.supermarket.bean.Item;
+import mob.code.supermarket.model.SupermarketException;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 
-@AllArgsConstructor
 @Data
 public class ReceiptItem {
-    private String name;
-    private Float count;
-    private BigDecimal price;
-    private String unit;
-    private String type;
+    private Item item;
+    private Barcode barcode;
+
+    public ReceiptItem(Item item, Barcode barcode) {
+        this.item = item;
+        this.barcode = barcode;
+        checkCount();
+    }
+
+    public ReceiptItem(String name, Float count, BigDecimal price, String unit, String type) {
+        this.item = new Item("", name, unit, price.doubleValue(), type);
+        this.barcode = new Barcode("", count, false);
+        checkCount();
+    }
+
+    private void checkCount() {
+        if (!isIndividual() && barcode.isNumberUndefined()) {
+            throw new SupermarketException("wrong quantity of " + barcode.getCode());
+        }
+    }
 
     public String itemInfo() {
         BigDecimal total = totalPrice();
         if (isIndividual() || isCountInteger()) {
-            if (StringUtils.isEmpty(unit)) {
-                return String.format("%s: %.0f x %.2f --- %.2f", getName(), getCount(), price, total);
+            if (StringUtils.isEmpty(item.getUnit())) {
+                return String.format("%s: %.0f x %.2f --- %.2f", item.getName(), barcode.getNumber(), item.getPrice(), total);
             }
-            return String.format("%s: %.0f(%s) x %.2f --- %.2f", getName(), getCount(), unit, price, total);
+            return String.format("%s: %.0f(%s) x %.2f --- %.2f", item.getName(), barcode.getNumber(), item.getUnit(), item.getPrice(), total);
         }
-        if (StringUtils.isEmpty(unit)) {
-            return String.format("%s: %.1f x %.2f --- %.2f", getName(), getCount(), price, total);
+        if (StringUtils.isEmpty(item.getUnit())) {
+            return String.format("%s: %.1f x %.2f --- %.2f", item.getName(), barcode.getNumber(), item.getPrice(), total);
         }
-        return String.format("%s: %.1f(%s) x %.2f --- %.2f", getName(), getCount(), unit, price, total);
+        return String.format("%s: %.1f(%s) x %.2f --- %.2f", item.getName(), barcode.getNumber(), item.getUnit(), item.getPrice(), total);
     }
 
     private boolean isIndividual() {
-        return "individual".contentEquals(type);
+        return "individual".contentEquals(item.getType());
     }
 
     public boolean isCountInteger() {
-        return (this.count - this.count.intValue()) == 0;
+        return (this.barcode.getNumber() - this.barcode.getNumber().intValue()) == 0;
     }
 
-
     public BigDecimal totalPrice() {
-        return price.multiply(BigDecimal.valueOf(count));
+        return BigDecimal.valueOf(item.getPrice())
+                .multiply(BigDecimal.valueOf(barcode.getNumber()));
     }
 }
