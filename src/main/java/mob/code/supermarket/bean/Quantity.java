@@ -10,7 +10,7 @@ import java.math.RoundingMode;
 @EqualsAndHashCode
 public class Quantity {
     public static final double DOUBLE_MIN = 0.000001;
-    private BigDecimal value;
+    private final BigDecimal value;
 
     public Quantity(BigDecimal valueBig) {
         this.value = valueBig;
