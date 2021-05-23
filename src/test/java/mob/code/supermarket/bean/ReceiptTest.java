@@ -57,6 +57,13 @@ public class ReceiptTest {
         Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 15.09, "L", "1", new BuyItem("", 3.5, "1123-1"))));
         assertThat(receipt.output().get(1), is("milk: 3.5(L) x 15.09 --- 52.81"));
     }
+
+    @Test
+    public void 当总价有尾部舍弃2位小数后面的1() throws Exception {
+        Receipt receipt = Receipt.of(Arrays.asList(new ReceiptItem("milk", 13.07, "L", "1", new BuyItem("", 0.5, "1123-1"))));
+        assertThat(receipt.output().get(1), is("milk: 0.5(L) x 13.07 --- 6.53"));
+    }
+
     @Test
     public void 当两个总价都舍弃尾部按舍弃后都累计() throws Exception {
         Receipt receipt = Receipt.of(Arrays.asList(

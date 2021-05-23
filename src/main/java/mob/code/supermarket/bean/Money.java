@@ -10,7 +10,7 @@ public class Money {
     }
 
     public String format() {
-        return new DecimalFormat("0.00").format(value);
+        return new DecimalFormat("0.00").format(Math.floor(value * 100) / 100);
     }
 
     public double toActual() {
