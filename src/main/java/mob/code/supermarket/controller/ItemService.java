@@ -19,17 +19,26 @@ public class ItemService {
     }
 
     String[] getFormattedReceipt(String[] barcodes) {
-        BarcodeParser barcodeParser = new BarcodeParser(barcodes);
-        List<QuantifiedBarcode> barcodeList = barcodeParser.getBarcodes();
-        List<ReceiptItem> receiptItems = barcodeList.stream()
-                .map(barcodeItem -> {
-                    String barcode = barcodeItem.getBarCode();
-                    Item item = getItem(barcode);
-                    return new ReceiptItem(item, barcodeItem.getQuantity());
-                })
-                .collect(Collectors.toList());
+        List<QuantifiedBarcode> barcodeList = getQuantifiedBarcodes(barcodes);
+        List<ReceiptItem> receiptItems = getReceiptItems(barcodeList);
         Receipt receipt = new Receipt(receiptItems);
         return receipt.format();
+    }
+
+    private List<QuantifiedBarcode> getQuantifiedBarcodes(String[] barcodes) {
+        BarcodeParser barcodeParser = new BarcodeParser(barcodes);
+        return barcodeParser.getBarcodes();
+    }
+
+    private List<ReceiptItem> getReceiptItems(List<QuantifiedBarcode> barcodeList) {
+        return barcodeList.stream()
+                .map(this::getReceiptItem)
+                .collect(Collectors.toList());
+    }
+
+    private ReceiptItem getReceiptItem(QuantifiedBarcode barcodeItem) {
+        String barcode = barcodeItem.getBarCode();
+        return new ReceiptItem(getItem(barcode), barcodeItem.getQuantity());
     }
 
     private Item getItem(String barcode) {

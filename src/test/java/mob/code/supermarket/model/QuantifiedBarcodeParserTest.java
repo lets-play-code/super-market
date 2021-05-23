@@ -24,11 +24,17 @@ public class QuantifiedBarcodeParserTest {
     @Test
     public void 支持小数位称重() {
         String[] codes = {"22345678-1.5"};
-        BarcodeParser barcodeParser=new BarcodeParser(codes);
+        BarcodeParser barcodeParser = new BarcodeParser(codes);
         List<QuantifiedBarcode> barcodes = barcodeParser.getBarcodes();
         assertThat(barcodes.size()).isEqualTo(1);
         assertThat(barcodes.get(0).getBarCode()).isEqualTo("22345678");
         assertThat(barcodes.get(0).getQuantity()).isEqualTo(1.5);
+    }
 
+    @Test(expected = SupermarketException.class)
+    public void 商品数量不支持1位以上的小数() {
+        String[] codes = {"22345678-1.55"};
+        BarcodeParser barcodeParser = new BarcodeParser(codes);
+        barcodeParser.getBarcodes();
     }
 }
