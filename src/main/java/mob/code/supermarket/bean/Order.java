@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * @author Simon
@@ -29,8 +30,8 @@ public class Order {
     }
 
 
-
     public double getAmount() {
-        return   quantity.multiply(BigDecimal.valueOf(price)).doubleValue();
+        return quantity.multiply(BigDecimal.valueOf(price))
+                .setScale(2, RoundingMode.FLOOR).doubleValue();
     }
 }
