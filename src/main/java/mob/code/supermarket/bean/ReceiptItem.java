@@ -2,46 +2,65 @@ package mob.code.supermarket.bean;
 
 import org.springframework.util.StringUtils;
 
-import java.lang.invoke.WrongMethodTypeException;
 import java.util.Optional;
 
 public class ReceiptItem {
     private final String name;
-    private final double count;
-    private final double price;
+    private Money price;
     private final String unit;
     private final String type;
+    private final Quantity quantity;
 
-    public ReceiptItem(String name, double count, double price, String unit, String type, BuyItem buyItem) {
+    public ReceiptItem(String name, Money price, String unit, String type, BuyItem buyItem) {
         this.name = name;
-        this.count = count;
+        this.quantity = buyItem.getQuantity();
         this.price = price;
         this.unit = unit;
         this.type = type;
-        if (type.equals("0")) {
-            new Quantity(this.count).assertIsInteger(buyItem.getBarcode());
+        checkQuantity(type, buyItem);
+    }
+
+    private void checkQuantity(String type, BuyItem buyItem) {
+        Quantity quantity = this.quantity;
+        quantity.ensureNotZero(buyItem.getBarcode());
+        if (isPackaged()) {
+            quantity.assertIsInteger(buyItem.getBarcode());
+            return;
         }
-        if (type.equals("1")) {
-            buyItem.ensureHasQuantity();
-            new Quantity(this.count).assertLegal(buyItem.getBarcode());
+        if (!buyItem.hasQuantity()) {
+            throw new WrongQuantityException(buyItem.getBarcode());
         }
+        quantity.assertLegal(buyItem.getBarcode());
+
     }
 
     public String format() {
+        return name + ": " + getQuantity() + getUnitPart() + " x " + price.format() + " --- " + totalMoney().format();
+    }
+
+    private String getUnitPart() {
         String unitPart = Optional.ofNullable(this.unit)
                 .filter(str -> !StringUtils.isEmpty(str))
                 .map(u -> "(" + u + ")").orElse("");
-        return name + ": " + getCount() + unitPart + " x " + new Money(price) + " --- " + new Money(total());
+        return unitPart;
     }
 
-    private String getCount() {
-        if (this.type.equals("0")) {
-            return String.valueOf((int) this.count);
+    private String getQuantity() {
+        if (isPackaged()) {
+            return String.valueOf(this.quantity.toInt());
         }
-        return new Quantity(this.count).toString();
+        return this.quantity.toString();
+    }
+
+    private boolean isPackaged() {
+        return this.type.equals("0");
     }
 
     public double total() {
-        return this.count * this.price;
+        return totalMoney().toActual();
+    }
+
+    public Money totalMoney() {
+        return this.price.times(this.quantity);
     }
 }

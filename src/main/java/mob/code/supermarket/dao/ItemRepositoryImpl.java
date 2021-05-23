@@ -18,4 +18,9 @@ public class ItemRepositoryImpl implements ItemRepository {
     public Optional<Item> findByBarcode(String barcode) {
         return itemDao.findById(barcode).map(ItemDO::toEntity);
     }
+
+    @Override
+    public void save(Item item) {
+        itemDao.save(ItemDO.fromEntity(item));
+    }
 }

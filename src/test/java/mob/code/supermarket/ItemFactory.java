@@ -20,15 +20,6 @@ public class ItemFactory {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public void save(Item item) {
-        Map<String, Object> args = new HashMap<>();
-        args.put("barcode", item.getBarcode());
-        args.put("name", item.getName());
-        args.put("unit", Optional.ofNullable(item.getUnit()).orElse(""));
-        args.put("price", BigDecimal.valueOf(item.getPrice()));
-        args.put("type", item.getType());
-        namedParameterJdbcTemplate.update("insert into item (barcode,name,unit,price,type) values (:barcode,:name,:unit,:price,:type)", args);
-    }
 
     public void clear() {
         jdbcTemplate.execute("truncate table item");

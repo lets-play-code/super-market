@@ -1,14 +1,14 @@
 package mob.code.supermarket.bean;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Receipt {
-    private String header = "****** SuperMarket receipt ******";
-    private String footer = "*********************************";
-    private String split = "---------------------------------";
+    private final static String header = "****** SuperMarket receipt ******";
+    private final static String footer = "*********************************";
+    private final static String split = "---------------------------------";
     private List<ReceiptItem> items;
 
     public Receipt(List<ReceiptItem> items) {
@@ -37,12 +37,13 @@ public class Receipt {
     }
 
     private String getTotalString() {
-        return "total: " + new Money(getTotalPrice()) + "(CNY)";
+        return "total: " + getTotalPriceMoney().format() + "(CNY)";
     }
 
-    private double getTotalPrice() {
+    private Money getTotalPriceMoney() {
         return items.stream()
-                .mapToDouble(ReceiptItem::total)
-                .sum();
+                .map(ReceiptItem::totalMoney)
+                .map(Money::toMoney)
+                .reduce(new Money(new BigDecimal(0)), Money::add);
     }
 }

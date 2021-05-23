@@ -24,12 +24,12 @@ public class ItemDO {
     private String type;
 
     public Item toEntity() {
-        return new Item(barcode, name, unit, price.doubleValue(), type);
+        return new Item(barcode, name, unit, price, type);
     }
 
     public static ItemDO fromEntity(Item entity) {
         return ItemDO.builder()
-                .price(BigDecimal.valueOf(entity.getPrice()))
+                .price(BigDecimal.valueOf(entity.getPrice().getValueBig().doubleValue()))
                 .name(entity.getName())
                 .type(entity.getType())
                 .unit(entity.getUnit())

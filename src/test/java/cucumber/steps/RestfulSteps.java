@@ -10,6 +10,7 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import mob.code.supermarket.Application;
 import mob.code.supermarket.ItemFactory;
 import mob.code.supermarket.bean.Item;
+import mob.code.supermarket.bean.ItemRepository;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,6 +38,8 @@ public class RestfulSteps {
     private int port;
     @Autowired
     ItemFactory itemFactory;
+    @Autowired
+    ItemRepository itemRepository;
     private ResponseEntity<String> response;
     private List<String> scanData;
 
@@ -76,8 +80,8 @@ public class RestfulSteps {
         itemFactory.clear();
         items.forEach(itemMap -> {
             Item item = new Item(itemMap.get("条码"),
-                    itemMap.get("名称"), itemMap.get("单位"), Double.parseDouble(itemMap.get("价格")), itemMap.get("类型"));
-            itemFactory.save(item);
+                    itemMap.get("名称"), itemMap.get("单位"), new BigDecimal(itemMap.get("价格")), itemMap.get("类型"));
+            itemRepository.save(item);
         });
     }
 
@@ -85,7 +89,6 @@ public class RestfulSteps {
     public void 扫描条码结果为(String content) throws JSONException {
         HttpMethod httpMethod = HttpMethod.valueOf("POST");
         response = RestfulHelper.connect(port).require(httpMethod, "/scan", new Gson().toJson(scanData));
-        System.out.println(response.getBody());
         JSONAssert.assertEquals(content, response.getBody(), false);
     }
 }

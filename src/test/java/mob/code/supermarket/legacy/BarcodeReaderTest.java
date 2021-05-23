@@ -1,64 +1,65 @@
 package mob.code.supermarket.legacy;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
-import java.util.Arrays;
-import java.util.List;
-import mob.code.supermarket.bean.BarCodeException;
 import org.junit.Test;
 
+import java.util.Arrays;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+
+
 public class BarcodeReaderTest {
-
     @Test
-    public void 当输入条形码为空时返回空() {
-        List<String> barcode = new BarcodeReader().getBarcode(null);
-        assertThat(barcode, is(Arrays.asList()));
+    public void input_1() throws Exception {
+        BarcodeReader barcodeReader = BarcodeReader.barcodeFactory();
+        barcodeReader.getBarcode(
+                "   \n" +
+                        "|  \n" +
+                        "|  \n" +
+                        "   \n");
+        assertThat(barcodeReader.barcodes, is(Arrays.asList("1")));
     }
 
     @Test
-    public void 当输入0() {
-        String  input = " _ \n"+
-                        "| |\n"+
-                        "|_|\n"+
-                        "\n";
-        List<String> barcode = BarcodeReader.barcodeFactory().getBarcode(input);
-        assertThat(barcode, is(Arrays.asList("0")));
+    public void input_2() throws Exception {
+        BarcodeReader barcodeReader = BarcodeReader.barcodeFactory();
+        barcodeReader.getBarcode(
+                " _ \n" +
+                        " _|\n" +
+                        "|_ \n" +
+                        "   \n");
+        assertThat(barcodeReader.barcodes, is(Arrays.asList("2")));
     }
 
     @Test
-    public void 当输入一个条形码时返回一个barcode() {
-        String  input = "    _  _     _  _  _  _ \n"+
-                        "|   _| _||_||_ |_   ||_|\n"+
-                        "|  |_  _|  | _||_|  ||_|\n"+
-                         "";
-        List<String> barcode = BarcodeReader.barcodeFactory().getBarcode(input);
-        assertThat(barcode, is(Arrays.asList("12345678")));
+    public void input_3() throws Exception {
+        BarcodeReader barcodeReader = BarcodeReader.barcodeFactory();
+        barcodeReader.getBarcode(
+                " _ \n" +
+                        " _|\n" +
+                        " _|\n" +
+                        "   \n");
+        assertThat(barcodeReader.barcodes, is(Arrays.asList("3")));
     }
-
 
     @Test
-    public void 当输入两个条形码时返回两个barcode() {
-        String  input = "    _  _     _  _  _  _ \n"+
-                        "|   _| _||_||_ |_   ||_|\n"+
-                        "|  |_  _|  | _||_|  ||_|\n"+
-                        "\n"+
-                        " _  _  _     _  _  _  _ \n"+
-                        " _| _| _||_||_ |_   ||_|\n"+
-                        "|_ |_  _|  | _||_|  ||_|\n"+
-                        "3.5";
-        List<String> barcode = BarcodeReader.barcodeFactory().getBarcode(input);
-        assertThat(barcode, is(Arrays.asList("12345678","22345678-3.5")));
+    public void input_4() throws Exception {
+        BarcodeReader barcodeReader = BarcodeReader.barcodeFactory();
+        barcodeReader.getBarcode(
+                "   \n" +
+                        "|_|\n" +
+                        "  |\n" +
+                        "   \n");
+        assertThat(barcodeReader.barcodes, is(Arrays.asList("4")));
     }
-
-
-
-    @Test(expected = BarCodeException.class)
-    public void 当输入一个无法识别的条形码则返回异常() {
-        String  input = "    _  _    a  _  _  _ \n"+
-                        "|   _| _||_||_ |    ||_|\n"+
-                        "|  |_  _|  | _||_|  ||_|\n"+
-                        "";
-        List<String> barcode = BarcodeReader.barcodeFactory().getBarcode(input);
+    @Test
+    public void input_5() throws Exception {
+        BarcodeReader barcodeReader = BarcodeReader.barcodeFactory();
+        barcodeReader.getBarcode(
+                " _ \n" +
+                        "|_ \n" +
+                        " _|\n" +
+                        "   \n");
+        assertThat(barcodeReader.barcodes, is(Arrays.asList("5")));
     }
 }

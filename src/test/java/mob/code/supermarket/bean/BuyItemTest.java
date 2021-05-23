@@ -12,7 +12,7 @@ public class BuyItemTest {
     public void 当没有数量缺省为1() throws Exception {
         BuyItem from = BuyItem.from("12345678");
         assertThat(from.getBarcode(), is("12345678"));
-        assertThat(from.getCount(), is(1));
+        assertThat(from.getQuantity(), is(new Quantity(1)));
     }
 
 
@@ -20,7 +20,7 @@ public class BuyItemTest {
     public void 当有数量则返回具体数量() throws Exception {
         BuyItem buyItem = BuyItem.from("12345678-2");
         assertThat(buyItem.getBarcode(), is("12345678"));
-        assertThat(buyItem.getCount(), is(2));
+        assertThat(buyItem.getQuantity(), is(new Quantity(2.0)));
     }
 
 
