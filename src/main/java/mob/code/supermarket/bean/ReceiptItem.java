@@ -6,17 +6,19 @@ import java.util.Optional;
 
 public class ReceiptItem {
     private final String name;
-    private final double price;
-    private Money priceObj;
+    private Money price;
     private final String unit;
     private final String type;
     private final Quantity quantity;
 
     public ReceiptItem(String name, double price, String unit, String type, BuyItem buyItem) {
+        this(name, new Money(price), unit, type, buyItem);
+    }
+
+    public ReceiptItem(String name, Money price, String unit, String type, BuyItem buyItem) {
         this.name = name;
         this.quantity = buyItem.getQuantity();
         this.price = price;
-        this.priceObj = new Money(price);
         this.unit = unit;
         this.type = type;
         checkQuantity(type, buyItem);
@@ -37,7 +39,7 @@ public class ReceiptItem {
     }
 
     public String format() {
-        return name + ": " + getQuantity() + getUnitPart() + " x " + new Money(price).format() + " --- " + new Money(total()).format();
+        return name + ": " + getQuantity() + getUnitPart() + " x " + price.format() + " --- " + totalMoney().format();
     }
 
     private String getUnitPart() {
@@ -59,6 +61,10 @@ public class ReceiptItem {
     }
 
     public double total() {
-        return new Money(this.quantity.getValue() * this.price).toActual();
+        return totalMoney().toActual();
+    }
+
+    public Money totalMoney() {
+        return this.price.times(this.quantity);
     }
 }
