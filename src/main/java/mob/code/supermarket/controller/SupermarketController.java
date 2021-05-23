@@ -61,7 +61,11 @@ public class SupermarketController {
         if (Objects.isNull(item)) {
             throw new SupermarketException("item doesn't exist: " + x.getCode());
         }
-        return new ReceiptItem(item.getName(), x.getNumber(), BigDecimal.valueOf(item.getPrice()), item.getUnit());
+        return new ReceiptItem(item.getName(),
+                x.getNumber(),
+                BigDecimal.valueOf(item.getPrice()),
+                item.getUnit(),
+                item.getType());
     }
 
     @PostMapping("tryBarCode")

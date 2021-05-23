@@ -78,3 +78,38 @@ Feature: Scan products
         ]
       }
       """
+
+  Scenario: Scan product has float
+    When I 'POST' the api '/scan' with
+      """
+      [
+        "22345678-1.5"
+      ]
+      """
+    Then the server response will match
+      """
+      {
+        "data": [
+          "****** SuperMarket receipt ******",
+          "milk: 1.5(L) x 12.30 --- 18.45",
+          "---------------------------------",
+          "total: 18.45(CNY)",
+          "*********************************"
+        ]
+      }
+      """
+
+  Scenario: Scan product has wrong float
+    When I 'POST' the api '/scan' with
+      """
+      [
+        "22345678-1.55"
+      ]
+      """
+    Then the server response will match
+      """
+      {
+        "data": null,
+        "error": "wrong quantity of 22345678"
+      }
+      """

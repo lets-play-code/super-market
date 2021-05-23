@@ -10,16 +10,31 @@ import java.math.BigDecimal;
 @Data
 public class ReceiptItem {
     private String name;
-    private Integer count;
+    private Float count;
     private BigDecimal price;
     private String unit;
+    private String type;
 
     public String itemInfo() {
         BigDecimal total = totalPrice();
-        if (StringUtils.isEmpty(unit)) {
-            return String.format("%s: %d x %.2f --- %.2f", getName(), getCount(), price, total);
+        if (isIndividual() || isCountInteger()) {
+            if (StringUtils.isEmpty(unit)) {
+                return String.format("%s: %.0f x %.2f --- %.2f", getName(), getCount(), price, total);
+            }
+            return String.format("%s: %.0f(%s) x %.2f --- %.2f", getName(), getCount(), unit, price, total);
         }
-        return String.format("%s: %d(%s) x %.2f --- %.2f", getName(), getCount(), unit, price, total);
+        if (StringUtils.isEmpty(unit)) {
+            return String.format("%s: %.1f x %.2f --- %.2f", getName(), getCount(), price, total);
+        }
+        return String.format("%s: %.1f(%s) x %.2f --- %.2f", getName(), getCount(), unit, price, total);
+    }
+
+    private boolean isIndividual() {
+        return "individual".contentEquals(type);
+    }
+
+    public boolean isCountInteger() {
+        return (this.count - this.count.intValue()) == 0;
     }
 
 
