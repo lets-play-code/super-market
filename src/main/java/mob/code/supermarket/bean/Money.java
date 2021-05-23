@@ -1,7 +1,6 @@
 package mob.code.supermarket.bean;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.text.DecimalFormat;
 
 public class Money {
     private double value;
@@ -10,8 +9,11 @@ public class Money {
         this.value = value;
     }
 
-    @Override
-    public String toString() {
-        return new BigDecimal(value).setScale(2, RoundingMode.HALF_UP).toString();
+    public String format() {
+        return new DecimalFormat("0.00").format(value);
+    }
+
+    public double toActual() {
+        return Double.parseDouble(format());
     }
 }

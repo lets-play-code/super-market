@@ -27,4 +27,10 @@ public class Quantity {
     public void assertLegal(String barcode) {
         this.ensureIsInteger(this.value * 10, barcode);
     }
+
+    public void ensureNotZero(String barcode) {
+        if(value<0.000001){
+            throw new WrongQuantityException(barcode);
+        }
+    }
 }

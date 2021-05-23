@@ -4,29 +4,36 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BuyItem {
-    private String barcode;
-    private double count;
-    private List<String> original;
+    private final String barcode;
+    private final double quantity;
+    private final List<String> original;
 
     public BuyItem(String key, List<BuyItem> values) {
         this.barcode = key;
-        this.count = values.stream().mapToDouble(BuyItem::getCount).sum();
-        this.original = values.stream().flatMap(buyItem -> buyItem.original.stream())
+        this.quantity = values.stream().mapToDouble(BuyItem::getQuantity).sum();
+        this.original = values.stream()
+                .flatMap(BuyItem::originalStream)
                 .collect(Collectors.toList());
     }
 
+    private Stream<String> originalStream() {
+        return original.stream();
+    }
+
+
     public BuyItem(String barcode, double count, String original) {
         this.barcode = barcode;
-        this.count = count;
-        this.original = Arrays.asList(original);
+        this.quantity = count;
+        this.original = Collections.singletonList(original);
     }
 
     public static BuyItem from(String str) {
@@ -38,7 +45,7 @@ public class BuyItem {
     }
 
     public void ensureHasQuantity() {
-        if (!this.original.stream().allMatch(record -> record.contains("-"))) {
+        if (!this.originalStream().allMatch(record -> record.contains("-"))) {
             throw new WrongQuantityException(barcode);
         }
     }

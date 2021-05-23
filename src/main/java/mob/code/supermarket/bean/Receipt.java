@@ -37,7 +37,7 @@ public class Receipt {
     }
 
     private String getTotalString() {
-        return "total: " + new Money(getTotalPrice()) + "(CNY)";
+        return "total: " + new Money(getTotalPrice()).format() + "(CNY)";
     }
 
     private double getTotalPrice() {
