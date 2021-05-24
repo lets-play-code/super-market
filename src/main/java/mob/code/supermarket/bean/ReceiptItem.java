@@ -16,7 +16,6 @@ public class ReceiptItem {
     }
 
     public void checkQuantity() {
-        buyItem.getQuantity().ensureNotZero(buyItem.getBarcode());
         if (item.isPackaged()) {
             buyItem.checkPackagedQuantity();
             return;
@@ -25,7 +24,7 @@ public class ReceiptItem {
     }
 
     public String format() {
-        return item.getName() + ": " + getQuantity() + getUnitPart() + " x " + item.getPrice().format() + " --- " + totalMoney().format();
+        return item.getName() + ": " + getQuantityFormatted() + getUnitPart() + " x " + item.getPrice().format() + " --- " + totalMoney().format();
     }
 
     private String getUnitPart() {
@@ -34,7 +33,7 @@ public class ReceiptItem {
                 .map(u -> "(" + u + ")").orElse("");
     }
 
-    private String getQuantity() {
+    private String getQuantityFormatted() {
         if (item.isPackaged()) {
             return String.valueOf(buyItem.getQuantityIntPart());
         }

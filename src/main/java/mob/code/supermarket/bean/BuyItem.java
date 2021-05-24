@@ -63,6 +63,7 @@ public class BuyItem {
     }
 
     public void checkBulkQuantity() {
+        getQuantity().ensureNotZero(getBarcode());
         if (!this.hasQuantity()) {
             throw new WrongQuantityException(this.getBarcode());
         }
@@ -70,6 +71,8 @@ public class BuyItem {
     }
 
     public void checkPackagedQuantity() {
+        getQuantity().ensureNotZero(getBarcode());
         quantity.assertIsInteger(getBarcode());
     }
+
 }
