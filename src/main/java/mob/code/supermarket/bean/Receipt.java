@@ -1,18 +1,16 @@
 package mob.code.supermarket.bean;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Receipt {
-    private final static String header = "****** SuperMarket receipt ******";
-    private final static String footer = "*********************************";
-    private final static String split = "---------------------------------";
-    private List<ReceiptItem> items;
+    private final static String HEADER = "****** SuperMarket receipt ******";
+    private final static String FOOTER = "*********************************";
+    private final static String SPLIT = "---------------------------------";
+    private final List<ReceiptItem> items;
 
     public Receipt(List<ReceiptItem> items) {
-
         this.items = items;
     }
 
@@ -22,11 +20,11 @@ public class Receipt {
 
     public List<String> output() {
         ArrayList<String> result = new ArrayList<>();
-        result.add(header);
+        result.add(HEADER);
         result.addAll(getBuyItems());
-        result.add(split);
+        result.add(SPLIT);
         result.add(getTotalString());
-        result.add(footer);
+        result.add(FOOTER);
         return result;
     }
 
@@ -44,6 +42,6 @@ public class Receipt {
         return items.stream()
                 .map(ReceiptItem::totalMoney)
                 .map(Money::toMoney)
-                .reduce(new Money(new BigDecimal(0)), Money::add);
+                .reduce(Money.zero(), Money::add);
     }
 }

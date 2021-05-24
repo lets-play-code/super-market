@@ -21,6 +21,10 @@ public class Money {
         this.value = bigDecimal;
     }
 
+    public static Money zero() {
+        return new Money(new BigDecimal(0));
+    }
+
     public String format() {
         return new DecimalFormat("0.00").format(Math.floor(value.doubleValue() * 100) / 100);
     }

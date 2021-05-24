@@ -29,7 +29,7 @@ public class ReceiptItem {
 
     private String getUnitPart() {
         return Optional.ofNullable(item.getUnit())
-                .filter(str -> !StringUtils.isEmpty(str))
+                .filter(StringUtils::hasText)
                 .map(u -> "(" + u + ")").orElse("");
     }
 
