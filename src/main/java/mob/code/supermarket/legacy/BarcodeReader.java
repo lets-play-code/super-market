@@ -92,17 +92,7 @@ public class BarcodeReader {
     }
 
     private String[] updateInputEntitys(String in) {
-        String[] finalEntryLines = new String[4];
-        String[] entryLines = in.split("\n");
-        if (entryLines.length == 3) {
-            finalEntryLines[0] = entryLines[0];
-            finalEntryLines[1] = entryLines[1];
-            finalEntryLines[2] = entryLines[2];
-            finalEntryLines[3] = "";
-        } else {
-            finalEntryLines = entryLines;
-        }
-        return finalEntryLines;
+        return in.split("\n",-1);
     }
 
     private void splitLineAndFillAccounts(String stringLine) {
