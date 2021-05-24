@@ -20,8 +20,15 @@ public class Item {
         this.type = type;
     }
 
+    public boolean isPackaged() {
+        return this.type.equals("0");
+    }
 
     public BigDecimal getPriceValue() {
         return this.price.getValue();
+    }
+
+    public Money calculateTotalMoney(Quantity quantity) {
+        return price.times(quantity);
     }
 }

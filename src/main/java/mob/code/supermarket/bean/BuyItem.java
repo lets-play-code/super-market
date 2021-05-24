@@ -54,4 +54,22 @@ public class BuyItem {
         return this.originalStream().allMatch(record -> record.contains("-"));
     }
 
+    public int getQuantityIntPart() {
+        return quantity.toInt();
+    }
+
+    public String getQuantityString() {
+        return quantity.toString();
+    }
+
+    public void checkBulkQuantity() {
+        if (!this.hasQuantity()) {
+            throw new WrongQuantityException(this.getBarcode());
+        }
+        quantity.assertBulkQuantityLegal(this.getBarcode());
+    }
+
+    public void checkPackagedQuantity() {
+        quantity.assertIsInteger(getBarcode());
+    }
 }
