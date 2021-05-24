@@ -63,16 +63,15 @@ public class BuyItem {
     }
 
     public void checkBulkQuantity() {
-        getQuantity().ensureNotZero(getBarcode());
-        if (!this.hasQuantity()) {
+        if (!this.hasQuantity() || quantity.isZero() || !quantity.onlyFraction(1)) {
             throw new WrongQuantityException(this.getBarcode());
         }
-        quantity.assertBulkQuantityLegal(this.getBarcode());
     }
 
     public void checkPackagedQuantity() {
-        getQuantity().ensureNotZero(getBarcode());
-        quantity.assertIsInteger(getBarcode());
+        if (quantity.isZero() || !quantity.onlyFraction(0)) {
+            throw new WrongQuantityException(this.getBarcode());
+        }
     }
 
 }

@@ -35,7 +35,7 @@ public class ReceiptItem {
 
     private String getQuantityFormatted() {
         if (item.isPackaged()) {
-            return String.valueOf(buyItem.getQuantityIntPart());
+            return buyItem.getQuantityIntPart() + "";
         }
         return buyItem.getQuantityString();
     }

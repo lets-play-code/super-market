@@ -28,32 +28,21 @@ public class Quantity {
         return value.setScale(1, RoundingMode.HALF_UP).toString();
     }
 
-    public void assertIsInteger(String barcode) {
-        ensureIsInteger(this.value.doubleValue(), barcode);
-    }
-
-    private void ensureIsInteger(double value, String barcode) {
-        double valueTimes10 = value - (int) value;
-        if (!isZero(valueTimes10)) {
-            throw new WrongQuantityException(barcode);
-        }
-    }
-
     private boolean isZero(double value) {
         return value < DOUBLE_MIN;
     }
 
-    public void assertBulkQuantityLegal(String barcode) {
-        this.ensureIsInteger(this.value.doubleValue() * 10, barcode);
+    public boolean isZero() {
+        return this.isZero(value.doubleValue());
     }
 
-    public void ensureNotZero(String barcode) {
-        if (isZero(value.doubleValue())) {
-            throw new WrongQuantityException(barcode);
-        }
+    public boolean onlyFraction(int count) {
+        BigDecimal decimal = this.value.multiply(new BigDecimal(10).pow(count));
+        double fractional = decimal.doubleValue() - decimal.intValue();
+        return isZero(fractional);
     }
 
     public int toInt() {
-        return (int) value.doubleValue();
+        return value.intValue();
     }
 }
