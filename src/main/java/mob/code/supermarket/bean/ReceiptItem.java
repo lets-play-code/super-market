@@ -12,7 +12,6 @@ public class ReceiptItem {
     public ReceiptItem(BuyItem buyItem, Function<BuyItem, Item> itemFeather) {
         this.buyItem = buyItem;
         this.item = itemFeather.apply(buyItem);
-        this.checkQuantity();
     }
 
     public void checkQuantity() {

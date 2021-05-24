@@ -1,7 +1,7 @@
 package mob.code.supermarket.bean;
 
 public class WrongQuantityException extends RuntimeException {
-    private String barcode;
+    private final String barcode;
 
 
     public WrongQuantityException(String barcode) {

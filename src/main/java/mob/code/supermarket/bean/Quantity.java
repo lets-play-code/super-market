@@ -12,8 +12,8 @@ public class Quantity {
     public static final double DOUBLE_MIN = 0.000001;
     private final BigDecimal value;
 
-    public Quantity(BigDecimal valueBig) {
-        this.value = valueBig;
+    public Quantity(BigDecimal value) {
+        this.value = value;
     }
 
     public Quantity add(Quantity another) {

@@ -7,7 +7,6 @@ import mob.code.supermarket.legacy.BarcodeReader;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,11 +22,8 @@ public class SupermarketController {
     @PostMapping("scan")
     public Response<List<String>> scan(@RequestBody List<String> items) {
         List<String> newItems = BarcodeReader.barcodeFactory().getBarcode(String.join("\n", items));
-        Function<BuyItem, Item> itemFetcher = (buyItem) -> itemRepository.findByBarcode(buyItem.getBarcode()).orElseThrow(() -> new ItemNotFoundException(buyItem.getBarcode()));
-        List<ReceiptItem> receiptItems = new BuyItems(newItems)
-                .toItemsStream()
-                .map(buyItem -> new ReceiptItem(buyItem, itemFetcher))
-                .collect(Collectors.toList());
+        ReceiptItemFactory receiptItemsFactory = new ReceiptItemFactory(itemRepository);
+        List<ReceiptItem> receiptItems = new BuyItems(newItems).mapToList(receiptItemsFactory::create);
         Receipt receipt = Receipt.of(receiptItems);
         return Response.of(receipt.output());
     }
